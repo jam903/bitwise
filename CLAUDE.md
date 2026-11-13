@@ -1,6 +1,6 @@
 # CLAUDE.md - Project Guidance
 
-- **Project**: wordle-with-records (working name — the public game name is still open; see ADR-0001's follow-ups)
+- **Project**: Bitwise (repo: `wordle-with-records`; name chosen 2026-11-13, see ADR-0001's follow-ups)
 - **Human**: Jana Mourad
 - **AI**: Lexer 5.5 (Claude Opus 5.5, Claude Code) — single founding seat; roster in `docs/inbox/agent-sessions.json`
 - **Last Updated**: 2026-11-13
@@ -249,7 +249,7 @@ If the script was successfully used, append as comments how, and what the outcom
 A browser word-guessing game in the Wordle genre (guess the hidden word; each letter gets colored feedback: right place / wrong place / absent) whose answers are computer-science terms such as ARRAY, STACK, QUEUE, CACHE, TOKEN. Built with Vue single-file components using scoped CSS, hosted free on GitHub Pages; this repo holds both the game and its deliberation record.
 
 ### Current focus:
-First playable version built (unlimited play; working title "Bitwise"). Next: first GitHub Pages deploy, the public name, and Jana's review of the answer list.
+First playable version of Bitwise built (unlimited play). Next: first GitHub Pages deploy and Jana's review of the answer list.
 
 ### Key decisions made:
 - Toolchain: TypeScript + Vue 3 + Vite + Vitest, GitHub Actions deploy to Pages — see `docs/adr/0001-toolchain-language-and-deploy-pipeline.md`

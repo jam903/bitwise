@@ -85,7 +85,7 @@ The game needs a toolchain before any code: a language, a test runner, a build, 
 
 ## Open Follow-ups
 
-- [ ] **Concern: public name and look.** "Wordle" is a New York Times trademark, and in 2022 the NYT sent DMCA takedown notices for Wordle clones hosted on GitHub. The guess-a-word-with-colored-feedback mechanic is a genre (it predates Wordle, e.g. the TV game *Lingo*), but a public Pages site named "Wordle" that copies its look invites trouble. Proposal: give the game its own name and visual identity before the first public deploy. The repo name also sets the Pages URL and the Vite `base`, so rename the repo before setting `base`, not after. (GitHub redirects old repo URLs, but not old Pages URLs.)
+- [x] **Resolved 2026-11-13: the game is named Bitwise** (Jana Mourad, in chat), with its own palette and type. **Concern: public name and look.** "Wordle" is a New York Times trademark, and in 2022 the NYT sent DMCA takedown notices for Wordle clones hosted on GitHub. The guess-a-word-with-colored-feedback mechanic is a genre (it predates Wordle, e.g. the TV game *Lingo*), but a public Pages site named "Wordle" that copies its look invites trouble. Proposal: give the game its own name and visual identity before the first public deploy. The repo name also sets the Pages URL and the Vite `base`, so rename the repo before setting `base`, not after. (GitHub redirects old repo URLs, but not old Pages URLs.)
 - [ ] **Concern: Pages on a free account requires a public repo.** That makes this whole deliberation record public too: ADRs, CLAUDE.md, and the crew registry. Nothing sensitive is in it today; worth knowing before writing anything personal into an ADR.
 - [ ] **Unverified assumption**: `kintsugi` (the template's update tool) isn't installed, so `just gate` currently exits 2 on its "no kintsugi.lock" warning even though the placeholder and registry checks pass. Either install it and run `kintsugi adopt`, or decide that warnings shouldn't fail the gate.
 
@@ -97,7 +97,7 @@ The game needs a toolchain before any code: a language, a test runner, a build, 
 - [x] Scaffold with `npm create vue@latest` per the answer; set `base`; add the deploy workflow - Owner: Lexer 5.5
 - [x] Extend `just gate` with the app test + build steps; update CLAUDE.md's Fifth Directive to match - Owner: Lexer 5.5
 - [ ] Enable Pages (Settings → Pages → Source: GitHub Actions) and push `main` for the first deploy - Owner: Jana Mourad
-- [ ] Choose the public game name before the first public deploy ("Bitwise" is a working title) - Owner: Jana Mourad
+- [x] Choose the public game name before the first public deploy: **Bitwise** (Jana, 2026-11-13) - Owner: Jana Mourad
 
 ---
 
