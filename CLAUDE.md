@@ -249,17 +249,19 @@ If the script was successfully used, append as comments how, and what the outcom
 A browser word-guessing game in the Wordle genre (guess the hidden word; each letter gets colored feedback: right place / wrong place / absent) whose answers are computer-science terms such as ARRAY, STACK, QUEUE, CACHE, TOKEN. Built with Vue single-file components using scoped CSS, hosted free on GitHub Pages; this repo holds both the game and its deliberation record.
 
 ### Current focus:
-First playable version of Bitwise built (unlimited play). Next: first GitHub Pages deploy and Jana's review of the answer list.
+Bitwise is live at https://jam903.github.io/bitwise/ with a two-step hint (ADR-0004). Next: Jana's fact-check of the answer list and its clues.
 
 ### Key decisions made:
 - Toolchain: TypeScript + Vue 3 + Vite + Vitest, GitHub Actions deploy to Pages — see `docs/adr/0001-toolchain-language-and-deploy-pipeline.md`
 - Word lists: curated CS answers, any English five-letter guess (ENABLE) — see `docs/adr/0002-word-lists-and-guess-validation.md`
 - Game mode: unlimited play, state in localStorage — see `docs/adr/0003-game-mode-and-saved-state.md`
+- Hints: two steps, category then definition; the meaning always shows at game end — see `docs/adr/0004-hint-button-what-a-clue-reveals.md`
 
 ### Code map:
 - `src/game/`: rules with no UI (`score.ts`, `words.ts`, `stats.ts`, `storage.ts`) + the `useGame.ts` composable; tests in `src/game/__tests__/`
-- `src/game/data/answers.txt`: the curated answer list (one word per line, comment header has the curation rules)
-- `src/components/`: `GameBoard`, `GameKeyboard`, `GameOver`, each with `<style scoped>`; `src/assets/base.css` is the only global CSS (tokens + reset)
+- `src/game/data/answers.txt`: the curated answers with their hint clues, `WORD | category | definition` (comment header has the rules)
+- `src/components/`: `GameBoard`, `GameKeyboard`, `GameOver`, `HintButton`, `ClueText`, each with `<style scoped>`; `src/assets/base.css` is the only global CSS (tokens + reset)
+- Layout: `.board-area` in `App.vue` is a size container; the board fits the leftover height, so new rows never push the keyboard off short phones. Check UI changes with screenshots at 360×640 (unit tests can't see layout)
 
 ### Open questions:
 ```bash

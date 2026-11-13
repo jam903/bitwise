@@ -3,8 +3,8 @@
 # Hint button: what a clue reveals
 
 - **Date**: 2026-11-13
-- **Iteration**: 2
-- **Status**: Accepted
+- **Iteration**: 3
+- **Status**: Implemented
 - **Deciders**: Jana Mourad, Lexer 5.5
 
 **TL;DR**: Add a hint button that gives a clue about the hidden CS word. Still open: what the clue reveals, which decides how much clue text gets written and fact-checked.
@@ -89,13 +89,14 @@ Players who get stuck need a way forward that teaches them something about the C
 
 - [ ] Concern: clue accuracy. Definitions I draft are a first pass; a wrong definition in a CS game is worse than no hint. Whatever is chosen, the clue file gets your review before it ships.
 - [ ] Concern: a few answers are also everyday words (MOUSE, TRAIN, STYLE, VIRUS). Their clues must point at the CS meaning, or the hint misleads.
+- [ ] Future task: browser-level layout tests (e.g. Playwright screenshots at 360×640 and 390×844, light and dark) to guard the class of bug found in iteration 3, which unit tests cannot see.
 
 ---
 
 ## Action Items
 
 - [x] Answer QST-HINT-CONTENT and confirm the assumptions - Owner: Jana Mourad
-- [ ] Draft the clue data; implement the button, saved state, and result-panel line; tests; deploy - Owner: Lexer 5.5
+- [x] Draft the clue data; implement the button, saved state, and result-panel line; tests; deploy - Owner: Lexer 5.5
 - [ ] Fact-check the clue file - Owner: Jana Mourad
 
 ---
@@ -113,6 +114,17 @@ Players who get stuck need a way forward that teaches them something about the C
 - Contributors: Jana Mourad, Lexer 5.5 (Claude Opus 5.5)
 - Changes: Recorded the answer (D — category, then definition); filled the Decision
 - Outcome: `Draft → Accepted`
+
+### Iteration 3 (2026-11-13)
+- Trigger: Implementation and deploy
+- Contributors: Lexer 5.5 (Claude Opus 5.5)
+- Changes:
+  - **Data**: `src/game/data/answers.txt` is now `WORD | category | definition` for all 117 answers, across 18 categories. Tests require every answer to have both clues, forbid a clue from containing its own word, and forbid any category used by only one word (a one-word category *is* the answer).
+  - **First catch by those tests**: ERROR's category was "error handling", which spells the answer in the first hint. The category was renamed "exceptions & failures" for all six of its words.
+  - **Code**: `useGame` gains `hintsUsed` (0–2), saved with the game, reset by "play again", and locked once the game ends. Stats are untouched. `storage.ts` still accepts games saved before this change (no `hints` field → 0). `HintButton.vue` sits between board and keyboard and drops focus after a mouse click, so the next Enter submits the guess instead of spending the second hint. `ClueText.vue` shows the clues above the board in a polite live region. `GameOver.vue` shows "with a hint" and, always, the word's category and definition.
+  - **Layout bug found by screenshots, fixed before shipping**: on a 360×640 phone the extra rows pushed the keyboard off-screen, and the board spilled over the hint button. Root cause: tile letters had a fixed 24px minimum, so on a shrunken board each letter was taller than its square tile and `aspect-ratio` let tiles grow. Fix: the board sizes itself to the leftover height (container query on `.board-area`), letters size to the board (`min(2rem, 9cqw)`), and short screens (≤700px tall) hide the tagline and use smaller keys. Verified by screenshots at 360×640 and 360×800, light and dark. *Third Directive note*: no regression test was added for this layout bug, because jsdom has no layout engine and any assertion would be contrived (Fourth Directive). A browser-based visual test (e.g. Playwright screenshots) would be the honest guard; see Open Follow-ups.
+  - Tests: 32 → 48. Deployed by run 43487869527 (build + deploy green). The live bundle contains the hint UI, and a render of https://jam903.github.io/bitwise/ shows the "Hint: show category" button.
+- Outcome: `Accepted → Implemented`
 
 ---
 

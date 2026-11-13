@@ -113,6 +113,12 @@ The game needs to decide how answers are chosen and what is remembered between v
   - Stats change only on the submit that ends a game, so reloading a finished game never counts it twice (tested).
 - Outcome: `Accepted → Implemented`
 
+### Iteration 4 (2026-11-13)
+- Trigger: ADR-0004 (hint button) added a field to the saved game
+- Contributors: Lexer 5.5 (Claude Opus 5.5)
+- Changes: The saved game is now `{ answer, guesses, hints }`. The storage key stays `…:game:v1`, because `hints` is optional: games saved before the change load with 0 hints used (tested), so players mid-game during the deploy keep their game. Stats format unchanged.
+- Outcome: no status change (still Implemented)
+
 ---
 
 ## Links
