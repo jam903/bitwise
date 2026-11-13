@@ -15,7 +15,7 @@
 # Lines starting with # are ignored. Clues are a first draft by Lexer 5.5,
 # awaiting Jana's fact-check: a wrong definition is worse than no hint.
 
-ABORT | exceptions & failures |Stop a running operation early, often rolling back what it had already done.
+ABORT | exceptions & failures | Stop a running operation early, often rolling back what it had already done.
 ADDER | hardware | A digital circuit that sums two binary numbers.
 AGENT | machine learning & AI | An entity that observes its environment and takes actions toward a goal.
 ALIAS | programming languages | A second name that refers to the same variable, memory location, or command.
@@ -30,14 +30,14 @@ BREAK | programming languages | Statement that immediately exits the innermost l
 BUILD | software tooling | Compile and package source code into something that can run or ship.
 CACHE | systems | Small, fast storage that keeps copies of recently used data to avoid slower lookups.
 CARRY | hardware | The bit passed to the next column when adding two binary digits overflows.
-CATCH | exceptions & failures |Block that handles an exception thrown inside the matching try.
+CATCH | exceptions & failures | Block that handles an exception thrown inside the matching try.
 CHAIN | data structures | Linked list hanging off a hash-table bucket to hold keys that collide.
 CLASS | programming languages | Blueprint in object-oriented code that defines an object's fields and methods.
 CLOCK | hardware | Signal whose regular ticks keep a processor's operations in step.
 CLONE | version control | Command that copies an entire remote repository to your machine.
 CODEC | data representation | Software or hardware that encodes and decodes audio or video.
 CONST | programming languages | Keyword declaring a binding that cannot be reassigned.
-CRASH | exceptions & failures |When a program stops abruptly because of an unhandled error.
+CRASH | exceptions & failures | When a program stops abruptly because of an unhandled error.
 CYCLE | algorithms | A path in a graph that starts and ends at the same vertex; detecting one is a classic DFS task.
 DEBUG | software tooling | Find and remove defects from a program.
 DEPTH | data structures | The number of edges from a tree's root down to a given node.
@@ -46,7 +46,7 @@ DIGIT | data representation | One symbol of a number in a positional system, lik
 DRIVE | hardware | A storage device, such as an SSD or hard disk, that keeps data when the power is off.
 EMPTY | data structures | The state of a stack, queue, or string that holds zero elements.
 EPOCH | machine learning & AI | One full pass of the training algorithm over the entire dataset.
-ERROR | exceptions & failures |A condition where a program cannot do what was asked, often reported as an exception or status code.
+ERROR | exceptions & failures | A condition where a program cannot do what was asked, often reported as an exception or status code.
 EVENT | web development | Something that happens, like a click or keypress, that code can listen for and react to.
 FALSE | programming languages | The Boolean value opposite to true.
 FAULT | systems | Trap raised when a memory access cannot proceed normally, as in a page ___ or segmentation ___.
@@ -82,7 +82,7 @@ MUTEX | concurrency | A lock that lets only one thread at a time into a critical
 NONCE | security | A number used once in a cryptographic protocol, so old messages cannot be replayed.
 OCTAL | data representation | The base-8 number system, using digits 0 to 7; Unix file permissions are written in it.
 OCTET | networking | Exactly eight bits; network standards use this term instead of "byte".
-PANIC | exceptions & failures |An unrecoverable error that halts a Go or Rust program, or an operating system kernel.
+PANIC | exceptions & failures | An unrecoverable error that halts a Go or Rust program, or an operating system kernel.
 PARSE | compilers | Analyze a sequence of tokens against a grammar to build a syntax tree.
 PATCH | version control | A set of changes to files, often shared as a diff.
 PIXEL | graphics | The smallest addressable dot of color in a raster image.
@@ -118,7 +118,7 @@ STORE | systems | An instruction that writes a register's value to memory, the c
 STYLE | web development | CSS rules that control how page elements look, collected in a ___sheet.
 SUPER | programming languages | Keyword that calls the parent class's version of a method or constructor.
 TABLE | databases | A collection of rows and columns holding records of one kind.
-THROW | exceptions & failures |Raise an exception to signal an error to the caller.
+THROW | exceptions & failures | Raise an exception to signal an error to the caller.
 TIMER | systems | A hardware or OS facility that fires an interrupt or callback after a set interval.
 TOKEN | compilers | The smallest meaningful unit of source code, like a keyword, name, or symbol.
 TRACE | software tooling | A record of a program's execution path, such as the stack ___ printed after an error.
