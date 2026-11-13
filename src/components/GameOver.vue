@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import type { GameStatus, Stats } from '@/game/types'
+import type { Clue } from '@/game/words'
 
 const props = defineProps<{
   status: Exclude<GameStatus, 'playing'>
   answer: string
   guessCount: number
   stats: Stats
+  clue: Clue | undefined
+  hintsUsed: number
 }>()
 
 const emit = defineEmits<{ 'play-again': [] }>()
@@ -22,12 +25,16 @@ onMounted(() => button.value?.focus())
 <template>
   <section class="panel" aria-labelledby="result-heading">
     <h2 id="result-heading">
-      <template v-if="status === 'won'">Solved in {{ guessCount }}/6</template>
+      <template v-if="status === 'won'">
+        Solved in {{ guessCount }}/6<template v-if="hintsUsed > 0"> with a hint</template>
+      </template>
       <template v-else>Out of guesses</template>
     </h2>
     <p class="answer">
       The word was <strong>{{ answer }}</strong>
+      <template v-if="clue"> · {{ clue.category }}</template>
     </p>
+    <p v-if="clue" class="definition">{{ clue.definition }}</p>
 
     <dl class="stats">
       <div>
@@ -89,8 +96,14 @@ h2 {
 }
 
 .answer {
-  margin: 4px 0 12px;
+  margin: 4px 0 4px;
   color: var(--muted);
+}
+
+.definition {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  line-height: 1.35;
 }
 
 .answer strong {
@@ -157,6 +170,25 @@ h2 {
   font: inherit;
   font-weight: 700;
   cursor: pointer;
+}
+
+/* Short screens: tighter panel so "Play again" stays on screen. */
+@media (max-height: 700px) {
+  .panel {
+    padding: 10px 14px;
+  }
+  .stats {
+    margin-bottom: 6px;
+  }
+  .stats dd {
+    font-size: 1.15rem;
+  }
+  .distribution {
+    margin-bottom: 8px;
+  }
+  .again {
+    padding: 10px;
+  }
 }
 
 .again:focus-visible {

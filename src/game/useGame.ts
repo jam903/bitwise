@@ -5,8 +5,8 @@ import { computed, ref } from 'vue'
 import { keyboardStates, scoreGuess } from './score'
 import { recordResult } from './stats'
 import { loadGame, loadStats, saveGame, saveStats } from './storage'
-import { MAX_GUESSES, WORD_LENGTH, type GameStatus, type ScoredGuess } from './types'
-import { isAllowedGuess, pickAnswer } from './words'
+import { MAX_GUESSES, MAX_HINTS, WORD_LENGTH, type GameStatus, type ScoredGuess } from './types'
+import { clueFor, isAllowedGuess, pickAnswer } from './words'
 
 export interface GameOptions {
   /** Source of randomness for choosing answers (tests pass a fixed one). */
@@ -19,6 +19,8 @@ export function useGame(options: GameOptions = {}) {
 
   const answer = ref(saved?.answer ?? pickAnswer(random))
   const guesses = ref<string[]>(saved?.guesses ?? [])
+  /** Hint steps used this game (ADR-0004): 0 none, 1 category, 2 definition. */
+  const hintsUsed = ref(saved?.hints ?? 0)
   const current = ref('')
   const message = ref('')
   /** Bumped on every rejected guess so the board can shake the row. */
@@ -37,8 +39,18 @@ export function useGame(options: GameOptions = {}) {
 
   const keys = computed(() => keyboardStates(scored.value))
 
+  /** The current answer's clues (always defined for words from the answer list). */
+  const clue = computed(() => clueFor(answer.value))
+
   function persist() {
-    saveGame({ answer: answer.value, guesses: guesses.value })
+    saveGame({ answer: answer.value, guesses: guesses.value, hints: hintsUsed.value })
+  }
+
+  /** Reveal the next hint step. Saved immediately, so a reload can't undo it. */
+  function useHint() {
+    if (status.value !== 'playing' || hintsUsed.value >= MAX_HINTS) return
+    hintsUsed.value++
+    persist()
   }
 
   function reject(text: string) {
@@ -79,6 +91,7 @@ export function useGame(options: GameOptions = {}) {
   function newGame() {
     answer.value = pickAnswer(random, answer.value)
     guesses.value = []
+    hintsUsed.value = 0
     current.value = ''
     message.value = ''
     persist()
@@ -100,6 +113,9 @@ export function useGame(options: GameOptions = {}) {
     scored,
     status,
     keys,
+    clue,
+    hintsUsed,
+    useHint,
     press,
     newGame,
   }

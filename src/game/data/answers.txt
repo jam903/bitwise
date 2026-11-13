@@ -1,128 +1,134 @@
-# Answer list: five-letter computer-science terms (ADR-0002).
+# Answer list with hint clues (ADR-0002, ADR-0004).
 #
-# Curation rules (approved 2026-11-13):
+# Format: WORD | category | definition
+#   - the category is the first hint, the definition the second; both are
+#     shown on the result panel when the game ends
+#   - neither clue may contain the word itself (use ___ for the blank), and
+#     every category must cover at least two words (tests enforce both)
+#
+# Curation rules for answers (approved 2026-11-13):
 #   - a real CS term a second-year student would recognize
 #   - no acronyms (ASCII, REGEX), no plurals made by adding S (BYTES),
 #     no proper nouns (LINUX)
 #   - exactly five letters A-Z (a unit test enforces this)
 #
-# One word per line; lines starting with # are ignored. Strike or add freely:
-# the tests check every answer stays typeable as a guess.
+# Lines starting with # are ignored. Clues are a first draft by Lexer 5.5,
+# awaiting Jana's fact-check: a wrong definition is worse than no hint.
 
-ABORT
-ADDER
-AGENT
-ALIAS
-ARITY
-ARRAY
-ASSET
-AWAIT
-BATCH
-BLAME
-BLOCK
-BREAK
-BUILD
-CACHE
-CARRY
-CATCH
-CHAIN
-CLASS
-CLOCK
-CLONE
-CODEC
-CONST
-CRASH
-CYCLE
-DEBUG
-DEPTH
-DEQUE
-DIGIT
-DRIVE
-EMPTY
-EPOCH
-ERROR
-EVENT
-FALSE
-FAULT
-FENCE
-FETCH
-FIELD
-FLOAT
-FLUSH
-FRAME
-GLYPH
-GRAPH
-GUARD
-INDEX
-INFER
-INFIX
-INPUT
-LABEL
-LATCH
-LAYER
-LEMMA
-LEVEL
-LEXER
-LOGIC
-LOGIN
-MACRO
-MEDIA
-MERGE
-MIXIN
-MODEL
-MODEM
-MOUSE
-MUTEX
-NONCE
-OCTAL
-OCTET
-PANIC
-PARSE
-PATCH
-PIXEL
-PRIME
-PRINT
-PROBE
-PROOF
-PROXY
-PRUNE
-QUBIT
-QUERY
-QUEUE
-QUOTA
-RADIX
-RANGE
-RESET
-ROUTE
-SCOPE
-SHARD
-SHELL
-SHIFT
-SLEEP
-SLICE
-SPAWN
-SPLIT
-SPOOF
-STACK
-STAGE
-STALL
-STASH
-STATE
-STORE
-STYLE
-SUPER
-TABLE
-THROW
-TIMER
-TOKEN
-TRACE
-TRAIN
-TRUTH
-TUPLE
-UNION
-VALUE
-VIRUS
-VOXEL
-WHILE
-WRITE
-YIELD
+ABORT | exceptions & failures |Stop a running operation early, often rolling back what it had already done.
+ADDER | hardware | A digital circuit that sums two binary numbers.
+AGENT | machine learning & AI | An entity that observes its environment and takes actions toward a goal.
+ALIAS | programming languages | A second name that refers to the same variable, memory location, or command.
+ARITY | theory & math | The number of arguments a function or operator takes.
+ARRAY | data structures | A fixed-size sequence of elements stored side by side and accessed by index.
+ASSET | web development | A static file a site ships alongside its code, such as an image, font, or stylesheet.
+AWAIT | concurrency | Keyword that pauses an async function until a promise or future settles.
+BATCH | machine learning & AI | The group of training examples processed together in one step of training.
+BLAME | version control | Command that shows which commit last changed each line of a file.
+BLOCK | programming languages | A group of statements treated as one unit, usually wrapped in braces.
+BREAK | programming languages | Statement that immediately exits the innermost loop or switch.
+BUILD | software tooling | Compile and package source code into something that can run or ship.
+CACHE | systems | Small, fast storage that keeps copies of recently used data to avoid slower lookups.
+CARRY | hardware | The bit passed to the next column when adding two binary digits overflows.
+CATCH | exceptions & failures |Block that handles an exception thrown inside the matching try.
+CHAIN | data structures | Linked list hanging off a hash-table bucket to hold keys that collide.
+CLASS | programming languages | Blueprint in object-oriented code that defines an object's fields and methods.
+CLOCK | hardware | Signal whose regular ticks keep a processor's operations in step.
+CLONE | version control | Command that copies an entire remote repository to your machine.
+CODEC | data representation | Software or hardware that encodes and decodes audio or video.
+CONST | programming languages | Keyword declaring a binding that cannot be reassigned.
+CRASH | exceptions & failures |When a program stops abruptly because of an unhandled error.
+CYCLE | algorithms | A path in a graph that starts and ends at the same vertex; detecting one is a classic DFS task.
+DEBUG | software tooling | Find and remove defects from a program.
+DEPTH | data structures | The number of edges from a tree's root down to a given node.
+DEQUE | data structures | Double-ended queue: add or remove items at either end.
+DIGIT | data representation | One symbol of a number in a positional system, like 0 to 9 in base ten.
+DRIVE | hardware | A storage device, such as an SSD or hard disk, that keeps data when the power is off.
+EMPTY | data structures | The state of a stack, queue, or string that holds zero elements.
+EPOCH | machine learning & AI | One full pass of the training algorithm over the entire dataset.
+ERROR | exceptions & failures |A condition where a program cannot do what was asked, often reported as an exception or status code.
+EVENT | web development | Something that happens, like a click or keypress, that code can listen for and react to.
+FALSE | programming languages | The Boolean value opposite to true.
+FAULT | systems | Trap raised when a memory access cannot proceed normally, as in a page ___ or segmentation ___.
+FENCE | concurrency | A memory barrier: an instruction that stops loads and stores from being reordered across it.
+FETCH | systems | First stage of the instruction cycle: read the next instruction from memory.
+FIELD | programming languages | A named data member of a record, struct, or object.
+FLOAT | data representation | Numeric type that stores real numbers with a fractional part, in binary scientific notation.
+FLUSH | systems | Force buffered data out to its destination, such as writing a buffer to disk.
+FRAME | systems | The region of the call stack holding one function call's locals and return address.
+GLYPH | graphics | The visual shape that draws a single character in a font.
+GRAPH | data structures | A set of vertices connected by edges.
+GUARD | programming languages | A condition checked at the top of a function that returns early if it fails, as in a ___ clause.
+INDEX | databases | An auxiliary structure that speeds up lookups on a table's column.
+INFER | machine learning & AI | Run a trained model on new input to get predictions.
+INFIX | theory & math | Notation that puts an operator between its operands, as in 2 + 3.
+INPUT | programming languages | Data a program reads in, from a user, a file, or another program.
+LABEL | machine learning & AI | The correct answer attached to a training example in supervised learning.
+LATCH | hardware | A simple circuit that holds one bit of state; flip-flops are built from them.
+LAYER | machine learning & AI | One stage of a neural network that transforms its input before passing it on.
+LEMMA | theory & math | A proven helper statement used as a stepping stone toward a larger theorem.
+LEVEL | data structures | All nodes at the same depth in a tree; ___-order traversal visits them one depth at a time.
+LEXER | compilers | Compiler stage that splits source text into tokens.
+LOGIC | theory & math | The formal study of truth values and valid inference; Boolean ___ underlies every circuit.
+LOGIN | security | The process of proving who you are to a system, usually with a username and password.
+MACRO | programming languages | A rule that expands into code before compilation, like C's #define.
+MEDIA | web development | CSS ___ queries apply different styles depending on screen size or device.
+MERGE | version control | Combine the changes from one branch into another.
+MIXIN | programming languages | A class that provides methods for other classes to include without being their parent.
+MODEL | machine learning & AI | The learned function, with its trained parameters, that maps inputs to predictions.
+MODEM | networking | A device that converts digital data to and from signals on a phone or cable line.
+MOUSE | hardware | A handheld pointing device that moves the cursor on screen.
+MUTEX | concurrency | A lock that lets only one thread at a time into a critical section.
+NONCE | security | A number used once in a cryptographic protocol, so old messages cannot be replayed.
+OCTAL | data representation | The base-8 number system, using digits 0 to 7; Unix file permissions are written in it.
+OCTET | networking | Exactly eight bits; network standards use this term instead of "byte".
+PANIC | exceptions & failures |An unrecoverable error that halts a Go or Rust program, or an operating system kernel.
+PARSE | compilers | Analyze a sequence of tokens against a grammar to build a syntax tree.
+PATCH | version control | A set of changes to files, often shared as a diff.
+PIXEL | graphics | The smallest addressable dot of color in a raster image.
+PRIME | theory & math | An integer greater than 1 divisible only by 1 and itself; RSA relies on huge ones.
+PRINT | programming languages | Write text to standard output; usually the first function a beginner calls.
+PROBE | algorithms | In open-addressing hash tables, check the next slot after a collision, as in linear ___ing.
+PROOF | theory & math | A rigorous argument that a statement, such as an algorithm's correctness, must be true.
+PROXY | networking | A server that forwards requests on behalf of clients.
+PRUNE | algorithms | Cut off branches of a search tree that cannot lead to a better answer, as in alpha-beta search.
+QUBIT | hardware | A quantum bit, which can be in a superposition of 0 and 1.
+QUERY | databases | A request for data from a database, typically written in SQL.
+QUEUE | data structures | First in, first out: add at the back, remove from the front.
+QUOTA | systems | A limit on how much disk, memory, or CPU time a user or process may consume.
+RADIX | data representation | The base of a number system; also the name of a non-comparison integer sort.
+RANGE | programming languages | A sequence of consecutive integers, like Python's built-in that counts from start up to stop.
+RESET | hardware | A signal that returns a circuit or system to its initial state.
+ROUTE | networking | The path a packet takes across a network to its destination.
+SCOPE | programming languages | The region of code in which a name is visible.
+SHARD | databases | One horizontal partition of a database, stored on its own server.
+SHELL | systems | A command-line interpreter, like bash or zsh, between you and the operating system.
+SHIFT | data representation | Bitwise operation that moves bits left or right, multiplying or dividing by powers of two.
+SLEEP | concurrency | Pause a thread for a set amount of time, giving up the CPU.
+SLICE | data structures | A view of a contiguous part of an array or list, like a[2:5] in Python.
+SPAWN | concurrency | Create a new process or thread.
+SPLIT | programming languages | Break a string into a list of pieces at each separator.
+SPOOF | security | Forge an identity, such as a sender's address, to impersonate a trusted source.
+STACK | data structures | Last in, first out: push onto the top, pop from the top.
+STAGE | version control | Mark changes to be included in the next commit.
+STALL | hardware | A pause in a CPU pipeline while an instruction waits for data or a resource.
+STASH | version control | Shelve uncommitted changes temporarily so you can switch to other work.
+STATE | theory & math | The current configuration of a machine; finite automata move from one to the next.
+STORE | systems | An instruction that writes a register's value to memory, the counterpart of load.
+STYLE | web development | CSS rules that control how page elements look, collected in a ___sheet.
+SUPER | programming languages | Keyword that calls the parent class's version of a method or constructor.
+TABLE | databases | A collection of rows and columns holding records of one kind.
+THROW | exceptions & failures |Raise an exception to signal an error to the caller.
+TIMER | systems | A hardware or OS facility that fires an interrupt or callback after a set interval.
+TOKEN | compilers | The smallest meaningful unit of source code, like a keyword, name, or symbol.
+TRACE | software tooling | A record of a program's execution path, such as the stack ___ printed after an error.
+TRAIN | machine learning & AI | Fit a model's parameters to data by repeatedly adjusting them to reduce error.
+TRUTH | theory & math | A ___ table lists a logic formula's output for every combination of inputs.
+TUPLE | data structures | A fixed-length, ordered group of values, often immutable, like (x, y).
+UNION | theory & math | The set of all elements that belong to either of two sets.
+VALUE | programming languages | The data a variable holds or an expression evaluates to.
+VIRUS | security | Malicious code that attaches to other programs and spreads when they run.
+VOXEL | graphics | A volume element: a 3-D pixel on a regular grid.
+WHILE | programming languages | A loop that repeats as long as its condition stays true.
+WRITE | systems | The system call that sends bytes to an open file descriptor.
+YIELD | programming languages | Keyword that hands a value back from a generator and pauses it until the next request.

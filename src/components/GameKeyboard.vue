@@ -124,4 +124,14 @@ function label(key: string, state: LetterState | undefined): string {
     height: 50px;
   }
 }
+
+/* Short screens: smaller keys leave the board room to stay visible. */
+@media (max-height: 700px) {
+  .keyboard {
+    gap: 6px;
+  }
+  .key {
+    height: 46px;
+  }
+}
 </style>

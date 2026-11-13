@@ -71,7 +71,68 @@ describe('playing a game', () => {
   })
 })
 
+describe('hints (ADR-0004)', () => {
+  it('reveals the category first, then the definition, then nothing more', () => {
+    const game = useGame({ random: () => 0 })
+    expect(game.hintsUsed.value).toBe(0)
+    expect(game.clue.value?.category).toBeTruthy()
+
+    game.useHint()
+    expect(game.hintsUsed.value).toBe(1)
+    game.useHint()
+    expect(game.hintsUsed.value).toBe(2)
+    game.useHint()
+    expect(game.hintsUsed.value).toBe(2)
+  })
+
+  it('keeps used hints after a reload, so reloading never gives a free hint back', () => {
+    const before = useGame({ random: () => 0 })
+    before.useHint()
+
+    const after = useGame({ random: () => 0 })
+    expect(after.hintsUsed.value).toBe(1)
+  })
+
+  it('offers fresh hints on "play again"', () => {
+    const game = useGame({ random: () => 0 })
+    game.useHint()
+    type(game, FIRST)
+    game.newGame()
+    expect(game.hintsUsed.value).toBe(0)
+  })
+
+  it('does not spend a hint once the game is over', () => {
+    const game = useGame({ random: () => 0 })
+    type(game, FIRST)
+    game.useHint()
+    expect(game.hintsUsed.value).toBe(0)
+  })
+
+  it('does not change win/loss stats when a hint was used', () => {
+    const game = useGame({ random: () => 0 })
+    game.useHint()
+    type(game, FIRST)
+    expect(game.stats.value).toMatchObject({ played: 1, wins: 1, currentStreak: 1 })
+  })
+})
+
 describe('saved state (ADR-0003)', () => {
+  it('still loads a game saved before hints existed (no "hints" field)', () => {
+    // Players who were mid-game when ADR-0004 shipped have the old save format.
+    localStorage.setItem('cs-word-game:game:v1', JSON.stringify({ answer: FIRST, guesses: ['CRANE'] }))
+
+    const game = useGame({ random: () => 0.5 })
+    expect(game.answer.value).toBe(FIRST)
+    expect(game.scored.value.map((g) => g.word)).toEqual(['CRANE'])
+    expect(game.hintsUsed.value).toBe(0)
+  })
+
+  it('rejects a saved hint count outside 0–2 and starts fresh', () => {
+    localStorage.setItem('cs-word-game:game:v1', JSON.stringify({ answer: FIRST, guesses: ['CRANE'], hints: 7 }))
+    const game = useGame({ random: () => 0 })
+    expect(game.scored.value).toHaveLength(0)
+  })
+
   it('restores an in-progress game after a reload', () => {
     const before = useGame({ random: () => 0 })
     type(before, 'CRANE')

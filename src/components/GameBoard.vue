@@ -79,7 +79,12 @@ watch(
   display: grid;
   grid-template-rows: repeat(6, 1fr);
   gap: 6px;
-  width: min(100%, 330px);
+  /* Six rows are 1.2x the width of five columns, so 82% of the available
+     height keeps the whole board visible (cqh = the board-area container). */
+  width: min(100%, 330px, 82cqh);
+  /* Letters size against the board's own width (cqw below), so a shrunken
+     board never has letters taller than their tiles. */
+  container-type: inline-size;
 }
 
 .row {
@@ -96,8 +101,14 @@ watch(
   border-radius: var(--radius);
   background: var(--surface);
   color: var(--text);
+  min-height: 0;
+  overflow: hidden;
   font-family: var(--font-mono);
-  font-size: clamp(1.5rem, 7vw, 2rem);
+  /* A fixed minimum font (the old clamp(1.5rem, …)) made letters taller than
+     small tiles, and aspect-ratio then let the tiles grow: the board spilled
+     over the hint button on a 360x640 screen. */
+  font-size: min(2rem, 9cqw);
+  line-height: 1;
   font-weight: 700;
   text-transform: uppercase;
   user-select: none;

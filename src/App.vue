@@ -1,12 +1,27 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
+import ClueText from '@/components/ClueText.vue'
 import GameBoard from '@/components/GameBoard.vue'
 import GameKeyboard from '@/components/GameKeyboard.vue'
 import GameOver from '@/components/GameOver.vue'
+import HintButton from '@/components/HintButton.vue'
 import { useGame } from '@/game/useGame'
 
-const { answer, current, message, rejections, stats, scored, status, keys, press, newGame } =
-  useGame()
+const {
+  answer,
+  current,
+  message,
+  rejections,
+  stats,
+  scored,
+  status,
+  keys,
+  clue,
+  hintsUsed,
+  useHint,
+  press,
+  newGame,
+} = useGame()
 
 function onKeydown(event: KeyboardEvent) {
   if (event.ctrlKey || event.metaKey || event.altKey) return
@@ -36,7 +51,13 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
 
     <p class="message" role="status" aria-live="polite">{{ message }}</p>
 
-    <GameBoard :scored="scored" :current="current" :rejections="rejections" />
+    <ClueText v-if="status === 'playing'" :clue="clue" :hints-used="hintsUsed" />
+
+    <!-- The board takes whatever height is left, so adding the hint rows never
+         pushes the keyboard off a short phone screen. -->
+    <div class="board-area">
+      <GameBoard :scored="scored" :current="current" :rejections="rejections" />
+    </div>
 
     <GameOver
       v-if="status !== 'playing'"
@@ -44,21 +65,26 @@ onUnmounted(() => window.removeEventListener('keydown', onKeydown))
       :answer="answer"
       :guess-count="scored.length"
       :stats="stats"
+      :clue="clue"
+      :hints-used="hintsUsed"
       @play-again="newGame"
     />
-    <GameKeyboard v-else :keys="keys" @key="press" />
+    <template v-else>
+      <HintButton :hints-used="hintsUsed" @hint="useHint" />
+      <GameKeyboard :keys="keys" @key="press" />
+    </template>
   </main>
 </template>
 
 <style scoped>
 .app {
-  min-height: 100dvh;
+  height: 100dvh;
   max-width: 520px;
   margin: 0 auto;
-  padding: 16px 16px max(16px, env(safe-area-inset-bottom));
+  padding: 12px 16px max(12px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .header {
@@ -116,9 +142,35 @@ h1 {
 }
 
 .message {
-  min-height: 1.5em;
+  min-height: 1.4em;
   margin: 0;
   text-align: center;
   font-weight: 600;
+}
+
+/* Short phones (e.g. 360x640): drop the tagline and tighten spacing so the
+   clue, board, hint button, and keyboard all fit without scrolling. */
+@media (max-height: 700px) {
+  .app {
+    gap: 8px;
+    padding-top: 8px;
+  }
+  .tagline {
+    display: none;
+  }
+  h1 {
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+  }
+}
+
+.board-area {
+  flex: 1 1 0;
+  min-height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* GameBoard sizes itself against this box's height (cqh units). */
+  container-type: size;
 }
 </style>

@@ -14,10 +14,18 @@ export interface ScoredGuess {
 
 export type GameStatus = 'playing' | 'won' | 'lost'
 
+/** Hints come in two steps (ADR-0004): 1 = category shown, 2 = definition too. */
+export const MAX_HINTS = 2
+
 /** What survives a reload (ADR-0003). Letter states are recomputed, not stored. */
 export interface SavedGame {
   answer: string
   guesses: string[]
+  /**
+   * Hint steps used, 0 to MAX_HINTS. Optional because games saved before
+   * ADR-0004 shipped have no such field; they load as 0.
+   */
+  hints?: number
 }
 
 export interface Stats {

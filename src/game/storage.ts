@@ -2,7 +2,7 @@
 // (private mode), full, or hold junk from an older version, so every access is
 // guarded and every read is validated: the game must still play if it fails.
 import { emptyStats } from './stats'
-import { MAX_GUESSES, WORD_LENGTH, type SavedGame, type Stats } from './types'
+import { MAX_GUESSES, MAX_HINTS, WORD_LENGTH, type SavedGame, type Stats } from './types'
 
 const GAME_KEY = 'cs-word-game:game:v1'
 const STATS_KEY = 'cs-word-game:stats:v1'
@@ -28,13 +28,16 @@ function write(key: string, value: unknown): void {
 
 function isSavedGame(x: unknown): x is SavedGame {
   if (typeof x !== 'object' || x === null) return false
-  const { answer, guesses } = x as Record<string, unknown>
+  const { answer, guesses, hints } = x as Record<string, unknown>
   return (
     typeof answer === 'string' &&
     WORD.test(answer) &&
     Array.isArray(guesses) &&
     guesses.length <= MAX_GUESSES &&
-    guesses.every((g) => typeof g === 'string' && WORD.test(g))
+    guesses.every((g) => typeof g === 'string' && WORD.test(g)) &&
+    // Absent in games saved before hints existed (ADR-0004): still valid.
+    (hints === undefined ||
+      (Number.isInteger(hints) && (hints as number) >= 0 && (hints as number) <= MAX_HINTS))
   )
 }
 

@@ -66,6 +66,35 @@ describe('App', () => {
     expect(wrapper.text()).toContain('Solved in 1/6')
   })
 
+  it('shows the category on the first hint and the definition on the second', async () => {
+    const hint = () => wrapper.find('.hint')
+
+    expect(hint().text()).toBe('Hint: show category')
+    await hint().trigger('click')
+    expect(wrapper.find('.clue').text()).toContain('data structures')
+    expect(wrapper.find('.clue').text()).not.toContain('Last in, first out')
+
+    expect(hint().text()).toBe('Hint: show definition')
+    await hint().trigger('click')
+    expect(wrapper.find('.clue').text()).toContain('Last in, first out')
+    expect(hint().attributes('disabled')).toBeDefined()
+  })
+
+  it('says "with a hint" on the result panel and always shows the meaning', async () => {
+    await wrapper.find('.hint').trigger('click')
+    await typeOnPhysicalKeyboard('STACK')
+
+    expect(wrapper.text()).toContain('Solved in 1/6 with a hint')
+    expect(wrapper.find('.panel').text()).toContain('Last in, first out')
+  })
+
+  it('shows the meaning on the result panel even when no hint was used', async () => {
+    await typeOnPhysicalKeyboard('STACK')
+    expect(wrapper.text()).toContain('Solved in 1/6')
+    expect(wrapper.text()).not.toContain('with a hint')
+    expect(wrapper.find('.panel').text()).toContain('data structures')
+  })
+
   it('tells the player when a guess is not a word', async () => {
     await typeOnPhysicalKeyboard('XQZZV')
     expect(wrapper.find('[role="status"]').text()).toBe('Not in word list')
