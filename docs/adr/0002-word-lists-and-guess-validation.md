@@ -3,8 +3,8 @@
 # Word lists and guess validation
 
 - **Date**: 2026-11-13
-- **Iteration**: 2
-- **Status**: Accepted
+- **Iteration**: 3
+- **Status**: Implemented
 - **Deciders**: Jana Mourad, Lexer 5.5
 
 **TL;DR**: Answers come from a hand-curated list of five-letter CS words. Still open: which guesses the game accepts, which decides whether we bundle an English dictionary.
@@ -109,7 +109,8 @@ The game needs two word lists, and it must decide which typed guesses count.
 ## Action Items
 
 - [x] Answer QST-GUESS-VALIDATION and confirm the two assumptions - Owner: Jana Mourad
-- [ ] Draft the answer list; source and license-check the guess list if B - Owner: Lexer 5.5
+- [x] Draft the answer list; source and license-check the guess list if B - Owner: Lexer 5.5
+- [ ] Review `src/game/data/answers.txt` (117 words): strike or add - Owner: Jana Mourad
 
 ---
 
@@ -126,6 +127,17 @@ The game needs two word lists, and it must decide which typed guesses count.
 - Contributors: Jana Mourad, Lexer 5.5 (Claude Opus 5.5)
 - Changes: Recorded the answer (B — CS answers, any English guess); named ENABLE as the guess-list source; filled the Decision
 - Outcome: `Draft → Accepted`
+
+### Iteration 3 (2026-11-13)
+- Trigger: Implementation
+- Contributors: Lexer 5.5 (Claude Opus 5.5)
+- Changes:
+  - `src/game/data/answers.txt`: 117 curated CS terms, with the curation rules in its header comment.
+  - `src/game/data/guesses.txt`: 8,636 five-letter ENABLE words, built by `scripts/ephemeral/2026-11-13-build-guess-list.sh`.
+  - The predicted gap was real: MUTEX, TUPLE, LEXER, DEQUE, QUBIT are missing from ENABLE, so `words.ts` merges answers into the allowed set (guarded by a test).
+  - Scoring is in `src/game/score.ts`; tests cover the four repeated-letter cases (QUEUE/EERIE, TOKEN/EMBED, STACK/SASSY, ARRAY/RADAR), plus a keyboard rule: a letter once yellow or green is never shown gray.
+  - The whole bundle, both lists included, is 53 KB gzipped.
+- Outcome: `Accepted → Implemented`
 
 ---
 

@@ -3,8 +3,8 @@
 # Toolchain, language, and deploy pipeline
 
 - **Date**: 2026-11-13
-- **Iteration**: 2
-- **Status**: Accepted
+- **Iteration**: 3
+- **Status**: Partially Implemented
 - **Deciders**: Jana Mourad, Lexer 5.5
 
 **TL;DR**: Vue 3 + Vite with scoped single-file components, Vitest, and a GitHub Actions deploy to Pages. Still open: TypeScript or JavaScript.
@@ -94,8 +94,10 @@ The game needs a toolchain before any code: a language, a test runner, a build, 
 ## Action Items
 
 - [x] Answer QST-LANGUAGE - Owner: Jana Mourad
-- [ ] Scaffold with `npm create vue@latest` per the answer; set `base`; add the deploy workflow - Owner: Lexer 5.5
-- [ ] Extend `just gate` with the app test + build steps; update CLAUDE.md's Fifth Directive to match - Owner: Lexer 5.5
+- [x] Scaffold with `npm create vue@latest` per the answer; set `base`; add the deploy workflow - Owner: Lexer 5.5
+- [x] Extend `just gate` with the app test + build steps; update CLAUDE.md's Fifth Directive to match - Owner: Lexer 5.5
+- [ ] Enable Pages (Settings → Pages → Source: GitHub Actions) and push `main` for the first deploy - Owner: Jana Mourad
+- [ ] Choose the public game name before the first public deploy ("Bitwise" is a working title) - Owner: Jana Mourad
 
 ---
 
@@ -112,6 +114,17 @@ The game needs a toolchain before any code: a language, a test runner, a build, 
 - Contributors: Jana Mourad, Lexer 5.5 (Claude Opus 5.5)
 - Changes: Recorded the answer (A — TypeScript) and the approved assumptions; filled the Decision
 - Outcome: `Draft → Accepted`
+
+### Iteration 3 (2026-11-13)
+- Trigger: Implementation
+- Contributors: Lexer 5.5 (Claude Opus 5.5)
+- Changes:
+  - Scaffolded by running create-vue (`--ts --vitest --bare`) in a scratch directory and copying only its config files, because create-vue empties a non-empty target directory.
+  - **Refinement of the base-path assumption**: instead of hard-coding `base: '/wordle-with-records/'`, `vite.config.ts` reads `BASE_PATH`, which `.github/workflows/deploy.yml` takes from `actions/configure-pages`. Renaming the repo (see Open Follow-ups) therefore can't silently break the site. Locally the base is `/`; verified that a build with `BASE_PATH=/wordle-with-records` prefixes every asset URL.
+  - **Scoped CSS, one exception**: every component uses `<style scoped>`. The only global CSS is `src/assets/base.css`, which holds the color/font tokens (CSS custom properties, light + dark) and the page reset. Tokens have to be global for components to share one palette.
+  - `just gate` now runs app tests + type-check/build first, then the template checks.
+  - CI uses Node 24 (current LTS); local development ran on Node 26 (see `docs/TECHNICAL-DEBT.md` for the one difference that mattered).
+- Outcome: `Accepted → Partially Implemented`. The deploy workflow is written but has never run, because nothing has been pushed. It becomes Implemented after the first successful Pages deploy.
 
 ---
 

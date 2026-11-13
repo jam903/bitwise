@@ -92,7 +92,7 @@ Before serving any change:
 2. Fix any failures before committing
 3. Never serve changes with a failing gate
 
-**Why**: Today (no app code yet) `just gate` catches unfilled template placeholders and a malformed crew registry. Once the Vue app exists, its project-gate slot gains the app's unit tests and a production build (exact commands settled by ADR-0001); those catch the two bug classes this game is most exposed to: **letter-scoring with repeated letters** (the very examples QUEUE and ARRAY have doubled letters, which is the classic place colored-feedback games get wrong) and **a build that works locally but breaks on GitHub Pages** (wrong base path → blank page with 404'd assets).
+**Why**: `just gate` runs, in order: the app's unit tests (`npm run test:unit -- --run`), the `vue-tsc` type-check plus production build (`npm run build`), then the template checks (no unfilled placeholders, valid crew registry). The tests guard the bug classes this game is most exposed to: **letter-scoring with repeated letters** (QUEUE, ARRAY: four tested cases), **answers that can't be typed** (CS terms missing from the English guess list), and **saved state** (reload restores the game, never double-counts a finished one, survives corrupted storage). The type-check catches mismatched letter states and props. The Pages base path is set by CI (ADR-0001, iteration 3), so only a real deploy proves it. *Known red*: `instantiate-check` exits 2 while `kintsugi` is unadopted (no `kintsugi.lock`); the app checks run first, so they still give a real signal.
 
 **Process**:
 ```bash
@@ -249,10 +249,17 @@ If the script was successfully used, append as comments how, and what the outcom
 A browser word-guessing game in the Wordle genre (guess the hidden word; each letter gets colored feedback: right place / wrong place / absent) whose answers are computer-science terms such as ARRAY, STACK, QUEUE, CACHE, TOKEN. Built with Vue single-file components using scoped CSS, hosted free on GitHub Pages; this repo holds both the game and its deliberation record.
 
 ### Current focus:
-Settling the pre-code decisions before any code: toolchain and gate (ADR-0001), word lists and guess validation (ADR-0002), game mode and saved state (ADR-0003).
+First playable version built (unlimited play; working title "Bitwise"). Next: first GitHub Pages deploy, the public name, and Jana's review of the answer list.
 
 ### Key decisions made:
-*(List ADRs here as they land, e.g. `- Auth approach — see docs/adr/0001-*.md`. Empty at birth is healthy.)*
+- Toolchain: TypeScript + Vue 3 + Vite + Vitest, GitHub Actions deploy to Pages — see `docs/adr/0001-toolchain-language-and-deploy-pipeline.md`
+- Word lists: curated CS answers, any English five-letter guess (ENABLE) — see `docs/adr/0002-word-lists-and-guess-validation.md`
+- Game mode: unlimited play, state in localStorage — see `docs/adr/0003-game-mode-and-saved-state.md`
+
+### Code map:
+- `src/game/`: rules with no UI (`score.ts`, `words.ts`, `stats.ts`, `storage.ts`) + the `useGame.ts` composable; tests in `src/game/__tests__/`
+- `src/game/data/answers.txt`: the curated answer list (one word per line, comment header has the curation rules)
+- `src/components/`: `GameBoard`, `GameKeyboard`, `GameOver`, each with `<style scoped>`; `src/assets/base.css` is the only global CSS (tokens + reset)
 
 ### Open questions:
 ```bash

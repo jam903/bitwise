@@ -3,8 +3,8 @@
 # Game mode and saved state
 
 - **Date**: 2026-11-13
-- **Iteration**: 2
-- **Status**: Accepted
+- **Iteration**: 3
+- **Status**: Implemented
 - **Deciders**: Jana Mourad, Lexer 5.5
 
 **TL;DR**: Game state and stats live in the player's browser (localStorage); there's no server. Still open: daily puzzle, unlimited play, or both.
@@ -86,7 +86,7 @@ The game needs to decide how answers are chosen and what is remembered between v
 ## Action Items
 
 - [x] Answer QST-GAME-MODE and confirm the two assumptions - Owner: Jana Mourad
-- [ ] Design the game-state shape (current game, stats) per the answer - Owner: Lexer 5.5
+- [x] Design the game-state shape (current game, stats) per the answer - Owner: Lexer 5.5
 
 ---
 
@@ -103,6 +103,15 @@ The game needs to decide how answers are chosen and what is remembered between v
 - Contributors: Jana Mourad, Lexer 5.5 (Claude Opus 5.5)
 - Changes: Recorded the answer (B — unlimited play); filled the Decision
 - Outcome: `Draft → Accepted`
+
+### Iteration 3 (2026-11-13)
+- Trigger: Implementation
+- Contributors: Lexer 5.5 (Claude Opus 5.5)
+- Changes:
+  - `src/game/useGame.ts` (Vue composable) holds the state; `pickAnswer()` in `words.ts` is the daily-mode seam and never repeats the previous word.
+  - `src/game/storage.ts` saves `{ answer, guesses }` and the stats under versioned keys. Every read is validated, so corrupted or old data starts a fresh game instead of crashing. Letter colors are recomputed from the guesses, never stored.
+  - Stats change only on the submit that ends a game, so reloading a finished game never counts it twice (tested).
+- Outcome: `Accepted → Implemented`
 
 ---
 
