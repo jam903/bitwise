@@ -3,8 +3,8 @@
 # Game mode and saved state
 
 - **Date**: 2026-11-13
-- **Iteration**: 1
-- **Status**: Draft
+- **Iteration**: 2
+- **Status**: Accepted
 - **Deciders**: Jana Mourad, Lexer 5.5
 
 **TL;DR**: Game state and stats live in the player's browser (localStorage); there's no server. Still open: daily puzzle, unlimited play, or both.
@@ -38,7 +38,7 @@
 ## Questions
 
 ### QST-GAME-MODE: Should the game offer a daily puzzle, unlimited play, or both?
-- Status: unanswered
+- Status: answered
 - Why asking: This sets how an answer is chosen, what gets saved, and what the end-of-game screen offers ("come back tomorrow" vs. "play again"). The CS answer list is likely small (an estimated 100–250 words; see ADR-0002), which matters: a daily puzzle uses up one word per day, and unlimited play uses one per game.
 - Need: pick a letter (or override — any shape answers)
 
@@ -52,13 +52,27 @@ Options:
 **B — Unlimited play, built so daily can be added.** *Rationale*: All word selection goes through one function (`pickAnswer()`), so adding a daily mode later (moving to C) is an addition, not a rewrite. Unlimited play is also what you'll want while building: you'll play dozens of rounds a day to find bad words in the list (ADR-0002's curation assumption), and a daily mode would allow one test round per day. It also avoids spending a small answer list one word per day before the list has been tested. *Confidence*: 0.65, because the technical argument is solid but the choice really depends on who the game is for, which I don't know. That makes it your call. *If wrong*: if the point is to share it with classmates or friends as a daily ritual ("did you get today's?"), the shared puzzle *is* the product, and this flips to **A** (or **C**, if you also want practice rounds).
 
 **ANS:** (by Jana Mourad)
-[Fill this in]   <!-- literal placeholder — parser-significant, do not paraphrase -->
+B — unlimited play, built so a daily mode can be added later, as recommended. I also approve the assumptions (state and stats in localStorage, no accounts; the answer list being readable in the site's code is acceptable). (Given in chat 2026-11-13; recorded by Lexer 5.5.)
 
 ---
 
 ## Decision
 
-*Pending QST-GAME-MODE.*
+### Context
+The game needs to decide how answers are chosen and what is remembered between visits.
+
+### Chosen: unlimited play, state in localStorage
+
+- Each game picks a random answer through one function, `pickAnswer()`, so a daily mode can later be added by giving it a date-based picker.
+- The in-progress game survives a reload; stats (played, wins, streaks, guess distribution) are kept per browser.
+- The end-of-game panel offers "play again".
+
+**Rationale**: Jana accepted the recommendation (QST-GAME-MODE → B) and both assumptions on 2026-11-13.
+
+**Trade-offs accepted**: no shared "today's word"; stats are lost if the browser storage is cleared; the answer list is readable in the site's code.
+
+### Consequences
+- If storage is unavailable (private mode, blocked), the game still plays; it just forgets.
 
 ---
 
@@ -71,7 +85,7 @@ Options:
 
 ## Action Items
 
-- [ ] Answer QST-GAME-MODE and confirm the two assumptions - Owner: Jana Mourad
+- [x] Answer QST-GAME-MODE and confirm the two assumptions - Owner: Jana Mourad
 - [ ] Design the game-state shape (current game, stats) per the answer - Owner: Lexer 5.5
 
 ---
@@ -83,6 +97,12 @@ Options:
 - Contributors: Lexer 5.5 (Claude Opus 5.5)
 - Changes: Laid out the mode options and state assumptions; asked QST-GAME-MODE
 - Outcome: Draft; awaiting Jana's answer
+
+### Iteration 2 (2026-11-13)
+- Trigger: Jana's answer in chat (approved all recommendations and assumptions)
+- Contributors: Jana Mourad, Lexer 5.5 (Claude Opus 5.5)
+- Changes: Recorded the answer (B — unlimited play); filled the Decision
+- Outcome: `Draft → Accepted`
 
 ---
 

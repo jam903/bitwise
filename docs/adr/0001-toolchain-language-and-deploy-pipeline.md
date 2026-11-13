@@ -3,8 +3,8 @@
 # Toolchain, language, and deploy pipeline
 
 - **Date**: 2026-11-13
-- **Iteration**: 1
-- **Status**: Draft
+- **Iteration**: 2
+- **Status**: Accepted
 - **Deciders**: Jana Mourad, Lexer 5.5
 
 **TL;DR**: Vue 3 + Vite with scoped single-file components, Vitest, and a GitHub Actions deploy to Pages. Still open: TypeScript or JavaScript.
@@ -43,7 +43,7 @@
 ## Questions
 
 ### QST-LANGUAGE: Should the Vue app be written in TypeScript or plain JavaScript?
-- Status: unanswered
+- Status: answered
 - Why asking: The language is the hardest thing to change once code exists. It also changes the gate: TypeScript adds a type-check step that fails the build on type errors. The Vue starter (`npm create vue@latest`) offers TypeScript as a single yes/no prompt, so setup cost is the same either way. The real difference is what you write and read every day. The game's core is small: a hidden word, up to six guesses, and a per-letter state that's always one of three values (right place / wrong place / absent).
 - Need: pick a letter (or override — any shape answers)
 
@@ -57,13 +57,29 @@ Options:
 **A — TypeScript.** *Rationale*: The one data structure everything depends on (a guess scored into a fixed-length row of three-valued letter states) is exactly what union types make hard to get wrong. The starter scaffolds TypeScript with one prompt answer, and the type-check joins `npm run build` at no extra cost, so the Fifth Directive's gate catches a whole class of bug that would otherwise need hand-written tests. *Confidence*: 0.7, because this rests on general knowledge of Vue's tooling, not on anything run in this repo yet, and it depends on your background, which I don't know. That makes it your call. *If wrong*: if you've never used TypeScript and this project's main purpose is learning Vue and the deliberation method, the extra syntax becomes friction with no matching payoff in a game this small. Then this flips to **B**.
 
 **ANS:** (by Jana Mourad)
-[Fill this in]   <!-- literal placeholder — parser-significant, do not paraphrase -->
+A — TypeScript, as recommended. I also approve the assumptions listed under Explicitation (create-vue scaffold + Vitest, GitHub Actions deploy, base path, gate = template checks + unit tests + build). (Given in chat 2026-11-13; recorded by Lexer 5.5.)
 
 ---
 
 ## Decision
 
-*Pending QST-LANGUAGE.* The scaffold and deploy choices under Assumptions stand unless Jana objects.
+### Context
+The game needs a toolchain before any code: a language, a test runner, a build, and a way onto GitHub Pages that nobody has to run by hand.
+
+### Chosen: TypeScript + Vue 3 + Vite + Vitest, deployed by GitHub Actions
+
+- `.vue` single-file components with `<script setup lang="ts">` and `<style scoped>`.
+- Vitest unit tests; `vue-tsc` type-check runs as part of `npm run build`.
+- The official Pages workflow (`configure-pages` → `upload-pages-artifact` → `deploy-pages`) builds and publishes on every push to `main`.
+- `just gate` = template checks + `npm run test:unit -- --run` + `npm run build`.
+
+**Rationale**: Jana accepted the recommendation (QST-LANGUAGE → A) and every Explicitation assumption on 2026-11-13. See the Recommendation above for the reasoning.
+
+**Trade-offs accepted**: type syntax to learn; the build fails on type errors even when the app would run.
+
+### Consequences
+- One closed type for letter states (`'correct' | 'present' | 'absent'`) shared by scoring, board, and keyboard.
+- The deploy needs a one-time repo setting: Settings → Pages → Source: **GitHub Actions**.
 
 ---
 
@@ -77,7 +93,7 @@ Options:
 
 ## Action Items
 
-- [ ] Answer QST-LANGUAGE - Owner: Jana Mourad
+- [x] Answer QST-LANGUAGE - Owner: Jana Mourad
 - [ ] Scaffold with `npm create vue@latest` per the answer; set `base`; add the deploy workflow - Owner: Lexer 5.5
 - [ ] Extend `just gate` with the app test + build steps; update CLAUDE.md's Fifth Directive to match - Owner: Lexer 5.5
 
@@ -90,6 +106,12 @@ Options:
 - Contributors: Lexer 5.5 (Claude Opus 5.5)
 - Changes: Laid out the toolchain assumptions; asked QST-LANGUAGE
 - Outcome: Draft; awaiting Jana's answer
+
+### Iteration 2 (2026-11-13)
+- Trigger: Jana's answer in chat ("I approve your recommendations … I also approve the smaller assumptions")
+- Contributors: Jana Mourad, Lexer 5.5 (Claude Opus 5.5)
+- Changes: Recorded the answer (A — TypeScript) and the approved assumptions; filled the Decision
+- Outcome: `Draft → Accepted`
 
 ---
 

@@ -3,8 +3,8 @@
 # Word lists and guess validation
 
 - **Date**: 2026-11-13
-- **Iteration**: 1
-- **Status**: Draft
+- **Iteration**: 2
+- **Status**: Accepted
 - **Deciders**: Jana Mourad, Lexer 5.5
 
 **TL;DR**: Answers come from a hand-curated list of five-letter CS words. Still open: which guesses the game accepts, which decides whether we bundle an English dictionary.
@@ -39,7 +39,7 @@
 ## Questions
 
 ### QST-GUESS-VALIDATION: Which guesses should the game accept?
-- Status: unanswered
+- Status: answered
 - Why asking: Answers are always CS words, but a player also *types* guesses, and the game must decide which typed words are allowed. This choice changes how the game feels, how much data the site ships, and where the word list comes from. For scale: a good five-letter CS answer list is probably 100–250 words (my rough estimate; we'll know once we curate it), while English has roughly 13,000 five-letter words.
 - Need: pick a letter (or override — any shape answers)
 
@@ -53,7 +53,7 @@ Options:
 **B — CS answers, any English guess.** *Rationale*: A small answer list means a CS-only guess list (A) gives away the search space: the only valid guesses are the possible answers. Free-form guessing (C) removes the word-game skill. B keeps the familiar strategy (open with a common word, then narrow it down) and puts the CS twist where it shows: the reveal. The cost is a static data file the browser caches once; GitHub Pages serves it compressed. *Confidence*: 0.75, because that's the convention in this genre and the size estimate is arithmetic (13k × 6 bytes ≈ 78 KB before compression), not a measured build. The deciding factor is what you want the game *for*, which only you know. *If wrong*: if the point is for players to *practice CS vocabulary* with every guess (a study tool more than a puzzle), then A's "every guess is a CS word" becomes the feature, and this flips to **A**.
 
 **ANS:** (by Jana Mourad)
-[Fill this in]   <!-- literal placeholder — parser-significant, do not paraphrase -->
+B — CS answers, any English guess, as recommended. I also approve the assumptions (five letters, six guesses; curation rules: no acronyms, no S-plurals, no proper nouns). (Given in chat 2026-11-13; recorded by Lexer 5.5.)
 
 ---
 
@@ -79,7 +79,23 @@ naive "is E anywhere in the answer?" result: present, PRESENT, absent, absent, c
 
 ## Decision
 
-*Pending QST-GUESS-VALIDATION.*
+### Context
+The game needs two word lists, and it must decide which typed guesses count.
+
+### Chosen: CS answers, any English five-letter guess
+
+- **Answers**: a hand-curated list of five-letter CS terms (no acronyms, no S-plurals, no proper nouns).
+- **Allowed guesses**: five-letter words from the public-domain ENABLE word list, plus every answer (some CS terms such as MUTEX aren't in an English dictionary, and an answer must always be typeable).
+- **Board**: five letters, six guesses.
+- **Scoring**: two passes (exact matches first, then "wrong place" only while unmatched copies remain), as in the COD block.
+
+**Rationale**: Jana accepted the recommendation (QST-GUESS-VALIDATION → B) and both assumptions on 2026-11-13.
+
+**Trade-offs accepted**: tens of kilobytes of guess-list data; the guess list isn't filtered for offensive words (typing one is accepted as a guess; it can never be an answer).
+
+### Consequences
+- The answer list is a reviewable data file; Jana can strike or add words.
+- Unit tests guard both lists (length, uniqueness, every answer typeable) and the repeated-letter scoring.
 
 ---
 
@@ -92,7 +108,7 @@ naive "is E anywhere in the answer?" result: present, PRESENT, absent, absent, c
 
 ## Action Items
 
-- [ ] Answer QST-GUESS-VALIDATION and confirm the two assumptions - Owner: Jana Mourad
+- [x] Answer QST-GUESS-VALIDATION and confirm the two assumptions - Owner: Jana Mourad
 - [ ] Draft the answer list; source and license-check the guess list if B - Owner: Lexer 5.5
 
 ---
@@ -104,6 +120,12 @@ naive "is E anywhere in the answer?" result: present, PRESENT, absent, absent, c
 - Contributors: Lexer 5.5 (Claude Opus 5.5)
 - Changes: Separated the answer list from the guess list; asked QST-GUESS-VALIDATION; recorded the repeated-letter scoring rule
 - Outcome: Draft; awaiting Jana's answer
+
+### Iteration 2 (2026-11-13)
+- Trigger: Jana's answer in chat (approved all recommendations and assumptions)
+- Contributors: Jana Mourad, Lexer 5.5 (Claude Opus 5.5)
+- Changes: Recorded the answer (B — CS answers, any English guess); named ENABLE as the guess-list source; filled the Decision
+- Outcome: `Draft → Accepted`
 
 ---
 
