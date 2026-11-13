@@ -3,8 +3,8 @@
 # Toolchain, language, and deploy pipeline
 
 - **Date**: 2026-11-13
-- **Iteration**: 3
-- **Status**: Partially Implemented
+- **Iteration**: 4
+- **Status**: Implemented
 - **Deciders**: Jana Mourad, Lexer 5.5
 
 **TL;DR**: Vue 3 + Vite with scoped single-file components, Vitest, and a GitHub Actions deploy to Pages. Still open: TypeScript or JavaScript.
@@ -97,7 +97,7 @@ The game needs a toolchain before any code: a language, a test runner, a build, 
 - [x] Scaffold with `npm create vue@latest` per the answer; set `base`; add the deploy workflow - Owner: Lexer 5.5
 - [x] Extend `just gate` with the app test + build steps; update CLAUDE.md's Fifth Directive to match - Owner: Lexer 5.5
 - [x] Rename the repo to `bitwise` so the address matches the game (Jana chose this 2026-11-13; site: https://jam903.github.io/bitwise/) - Owner: Lexer 5.5
-- [ ] Enable Pages (Source: GitHub Actions) and push `main` for the first deploy - Owner: Lexer 5.5, approved by Jana Mourad
+- [x] Enable Pages (Source: GitHub Actions) and push `main` for the first deploy - Owner: Lexer 5.5, approved by Jana Mourad
 - [x] Choose the public game name before the first public deploy: **Bitwise** (Jana, 2026-11-13) - Owner: Jana Mourad
 
 ---
@@ -126,6 +126,17 @@ The game needs a toolchain before any code: a language, a test runner, a build, 
   - `just gate` now runs app tests + type-check/build first, then the template checks.
   - CI uses Node 24 (current LTS); local development ran on Node 26 (see `docs/TECHNICAL-DEBT.md` for the one difference that mattered).
 - Outcome: `Accepted → Partially Implemented`. The deploy workflow is written but has never run, because nothing has been pushed. It becomes Implemented after the first successful Pages deploy.
+
+### Iteration 4 (2026-11-13)
+- Trigger: Jana named the game Bitwise and asked for it to go online
+- Contributors: Jana Mourad, Lexer 5.5 (Claude Opus 5.5)
+- Changes:
+  - Jana chose to rename the repo `wordle-with-records` → `bitwise` (via `gh repo rename`; local remote updated). No code change was needed, which validates iteration 3's base-path refinement.
+  - Enabled Pages with `build_type=workflow` *before* the first push, since `configure-pages` fails on a repo without Pages.
+  - Pushed `main`. Workflow run 43468132874 passed tests, type-check, build, and deploy.
+  - Verified live: https://jam903.github.io/bitwise/ serves `/bitwise/assets/*` (all 200), and a headless-Chrome render shows the board and keyboard.
+  - The run warned that the pinned action majors target the deprecated Node 20 runtime; logged as TD-2.
+- Outcome: `Partially Implemented → Implemented`
 
 ---
 
