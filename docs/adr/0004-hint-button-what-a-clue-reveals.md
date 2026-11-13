@@ -3,11 +3,11 @@
 # Hint button: what a clue reveals
 
 - **Date**: 2026-11-13
-- **Iteration**: 3
+- **Iteration**: 4
 - **Status**: Implemented
-- **Deciders**: Jana Mourad, Lexer 5.5
+- **Deciders**: Jana Mourad (decided), Lexer 5.5 (recommended; drafted the clue text and made the implementation choices listed under Provenance)
 
-**TL;DR**: Add a hint button that gives a clue about the hidden CS word. Still open: what the clue reveals, which decides how much clue text gets written and fact-checked.
+**TL;DR**: A two-step hint button: the first press shows the answer's category, the second its one-line definition. The result panel always shows both. Hints are saved with the game and don't affect stats. The clue text is Lexer 5.5's draft and shipped before Jana's fact-check, which is still pending.
 
 ---
 
@@ -75,9 +75,34 @@ Players who get stuck need a way forward that teaches them something about the C
 - Every listed assumption is approved: button between board and keyboard, clue above the board, available from the start, hint state saved with the game, no stats change, "solved with a hint" on the result panel, and a test that fails if any answer lacks a clue.
 - Because definitions exist for every word, the result panel also shows the answer's category and definition.
 
-**Rationale**: Jana chose D (QST-HINT-CONTENT) on 2026-11-13. See the Recommendation above for the reasoning.
+**Rationale**: Jana chose D (QST-HINT-CONTENT) on 2026-11-13, saying she agreed with the recommendation. The only reasoning on record is Lexer 5.5's, in the Recommendation above. [Missing: Jana's own reasons beyond agreeing with it.]
 
-**Trade-offs accepted**: 117 categories and definitions to draft and fact-check; the second hint often gives the word away to CS students.
+**Trade-offs accepted**: 117 categories and definitions to draft and fact-check; the second hint often gives the word away to CS students. (Both come from the option descriptions for B and D.)
+
+### Rejected alternatives
+
+*Reasons below come from this record (option descriptions and the Recommendation). None were stated by Jana.*
+
+- **A — Category alone**. Not chosen. Recommendation: "often too weak." The supporting figure, that a category "still leaves about 10–15 of the 117 answers", was Lexer 5.5's estimate and wasn't measured at decision time. *Measured after shipping (iteration 4): the 18 shipped categories hold 3 to 19 answers each.*
+- **B — Definition alone**. Not chosen. Recommendation: "often too strong"; option text: "a CS student will often get the word straight away."
+- **C — Letter reveal**. Not chosen. Recommendation: Jana's request asked for "a clue about the computer science word", which rules out C as the main hint. Option text: "it says nothing about CS."
+
+### Reopen if
+
+*The only recorded conditions are the Recommendation's* If wrong *lines. Jana stated no reopening conditions of her own.*
+
+- **Switch to A (category only)** if hints should stay light and keep the game a puzzle, or if fact-checking 117 definitions is too much work.
+- **Switch to C (letter reveal)** if no clue text should be written at all.
+- [Missing: no condition was recorded for what happens if Jana's pending fact-check finds the definitions unreliable.]
+
+### Provenance
+
+- **Ruled by Jana** (chat, 2026-11-13): option D; every Explicitation assumption (placement, availability, saved with the game, no stats change, one data file with a test for missing clues); implementing, testing, and deploying the feature.
+- **Chosen by Lexer 5.5 during implementation, not ruled on by Jana:**
+  - All 117 categories and definitions (18 categories), including renaming "error handling" to "exceptions & failures". Unreviewed; see Open Follow-ups.
+  - The short-screen layout changes: the board sizes to the leftover height, the tagline is hidden below 700px of height, and the keys are smaller.
+  - The hint button dropping focus after a mouse click.
+  - The result panel showing the meaning even when no hint was used. Option D's description said it "can also" do this, and Jana chose D; the "always" part was implemented as described in the Decision.
 
 ### Consequences
 - The answer file's format grows from one word per line to `WORD | category | definition`.
@@ -88,6 +113,7 @@ Players who get stuck need a way forward that teaches them something about the C
 ## Open Follow-ups
 
 - [ ] Concern: clue accuracy. Definitions I draft are a first pass; a wrong definition in a CS game is worse than no hint. Whatever is chosen, the clue file gets your review before it ships.
+  - **Not met (recorded in iteration 4)**: the clues shipped in deploy run 43487869527, after Jana asked to "implement the hint feature, test it, and deploy", but before her review. [Missing: whether Jana meant that request to waive the pre-ship review, or the review was simply skipped. The record doesn't say.] The fact-check is still pending (Action Items).
 - [ ] Concern: a few answers are also everyday words (MOUSE, TRAIN, STYLE, VIRUS). Their clues must point at the CS meaning, or the hint misleads.
 - [ ] Future task: browser-level layout tests (e.g. Playwright screenshots at 360×640 and 390×844, light and dark) to guard the class of bug found in iteration 3, which unit tests cannot see.
 
@@ -125,6 +151,17 @@ Players who get stuck need a way forward that teaches them something about the C
   - **Layout bug found by screenshots, fixed before shipping**: on a 360×640 phone the extra rows pushed the keyboard off-screen, and the board spilled over the hint button. Root cause: tile letters had a fixed 24px minimum, so on a shrunken board each letter was taller than its square tile and `aspect-ratio` let tiles grow. Fix: the board sizes itself to the leftover height (container query on `.board-area`), letters size to the board (`min(2rem, 9cqw)`), and short screens (≤700px tall) hide the tagline and use smaller keys. Verified by screenshots at 360×640 and 360×800, light and dark. *Third Directive note*: no regression test was added for this layout bug, because jsdom has no layout engine and any assertion would be contrived (Fourth Directive). A browser-based visual test (e.g. Playwright screenshots) would be the honest guard; see Open Follow-ups.
   - Tests: 32 → 48. Deployed by run 43487869527 (build + deploy green). The live bundle contains the hint UI, and a render of https://jam903.github.io/bitwise/ shows the "Hint: show category" button.
 - Outcome: `Accepted → Implemented`
+
+### Iteration 4 (2026-11-13)
+- Trigger: Jana's cold-resumption test, which found documentation gaps (rejected alternatives, reopening conditions, outdated TL;DRs, iteration numbering)
+- Contributors: Lexer 5.5 (Claude Opus 5.5), drawing only on what this record and the chat already contain
+- Changes:
+  - Rewrote the TL;DR (the iteration-1 draft still said "Still open: what the clue reveals"). It now states that the clues are unreviewed.
+  - Added **Rejected alternatives**, **Reopen if**, and **Provenance** to the Decision, marking missing information `[Missing: …]`.
+  - Flagged the unmet follow-up: the clue file was supposed to be reviewed "before it ships" and wasn't.
+  - Recorded a measurement next to the unmeasured "10–15 answers per category" estimate (shipped categories hold 3–19 each), without changing the original Recommendation text.
+  - Found while auditing, but not a documentation fix: the six "exceptions & failures" rows in `answers.txt` lost a space after their second `|` during iteration 3's rename. That's harmless at runtime, since the parser trims every field; it's fixed in a separate commit.
+- Outcome: no status change (still Implemented). No decision changed.
 
 ---
 

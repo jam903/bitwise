@@ -3,11 +3,11 @@
 # Word lists and guess validation
 
 - **Date**: 2026-11-13
-- **Iteration**: 3
+- **Iteration**: 4
 - **Status**: Implemented
-- **Deciders**: Jana Mourad, Lexer 5.5
+- **Deciders**: Jana Mourad (decided), Lexer 5.5 (recommended; made the implementation choices listed under Provenance)
 
-**TL;DR**: Answers come from a hand-curated list of five-letter CS words. Still open: which guesses the game accepts, which decides whether we bundle an English dictionary.
+**TL;DR**: Answers are 117 hand-curated five-letter CS terms. Any five-letter English word from the ENABLE list, plus every answer, is accepted as a guess. Six guesses; repeated letters are scored in two passes.
 
 ---
 
@@ -89,9 +89,35 @@ The game needs two word lists, and it must decide which typed guesses count.
 - **Board**: five letters, six guesses.
 - **Scoring**: two passes (exact matches first, then "wrong place" only while unmatched copies remain), as in the COD block.
 
-**Rationale**: Jana accepted the recommendation (QST-GUESS-VALIDATION → B) and both assumptions on 2026-11-13.
+**Rationale**: Jana accepted the recommendation (QST-GUESS-VALIDATION → B) and both assumptions on 2026-11-13. The only reasoning on record is Lexer 5.5's, in the Recommendation above. [Missing: Jana's own reasons. She approved "as recommended" without stating any.]
 
-**Trade-offs accepted**: tens of kilobytes of guess-list data; the guess list isn't filtered for offensive words (typing one is accepted as a guess; it can never be an answer).
+**Trade-offs accepted**: tens of kilobytes of guess-list data (named in option B, which Jana chose).
+
+**Not ruled on** (this line used to be listed as an accepted trade-off, which overstated it): the guess list isn't filtered for offensive words. Option B's own description said the list "needs filtering (offensive words, licensing check)". The licensing half was done (ENABLE is public domain); the filtering half was not. Lexer 5.5 mentioned the unfiltered list to Jana in chat as an open item. [Missing: Jana's ruling.] As shipped, an offensive word can be typed as a guess but can never be an answer.
+
+### Rejected alternatives
+
+*Reasons below come from this record (option descriptions, the Recommendation, the assumptions). None were stated by Jana.*
+
+- **A — CS words only** (QST-GUESS-VALIDATION). Not chosen. Recommendation: with a small answer list, the guess list *is* the answer list, which "gives away the search space". Option text: ordinary words like CRANE get rejected, "which feels like a bug."
+- **C — Any five letters** (QST-GUESS-VALIDATION). Not chosen. Recommendation: free-form guessing "removes the word-game skill." Option text: made-up strings can test five new letters at once.
+- **Variable word length** (Explicitation assumption). Deferred, not rejected: "I'd hold it for a later version." Recorded cost: it changes the board layout and makes the answer list harder to balance. [Missing: any trigger for revisiting it.]
+
+### Reopen if
+
+*The only recorded condition is the Recommendation's* If wrong *line. Jana stated no reopening conditions of her own.*
+
+- **Switch to A (CS words only)** if the game's purpose becomes practicing CS vocabulary with every guess, "a study tool more than a puzzle."
+- [Missing: no reopening condition was recorded for five letters / six guesses, the curation rules, or the choice of ENABLE.]
+
+### Provenance
+
+- **Ruled by Jana** (chat, 2026-11-13): option B; five letters and six guesses; the curation rules (no acronyms, no S-plurals, no proper nouns).
+- **Chosen by Lexer 5.5 during implementation, not ruled on by Jana:**
+  - ENABLE as the specific source. Option B named it only as an example ("such as").
+  - Merging the answers into the allowed guesses, which was needed because MUTEX, TUPLE, LEXER, DEQUE, and QUBIT aren't in ENABLE (iteration 3).
+  - Shipping the guess list unfiltered (see "Not ruled on" above).
+  - The 117 specific answer words. [Missing: Jana's review; see Action Items.]
 
 ### Consequences
 - The answer list is a reviewable data file; Jana can strike or add words.
@@ -101,7 +127,7 @@ The game needs two word lists, and it must decide which typed guesses count.
 
 ## Open Follow-ups
 
-- [ ] Future task: draft the CS answer list as a reviewable file (one word per line) so Jana can strike or add words before it ships
+- [x] Future task: draft the CS answer list as a reviewable file (one word per line) so Jana can strike or add words before it ships. *Done in iteration 3 (`src/game/data/answers.txt`); the format became `WORD | category | definition` under ADR-0004. The list shipped before Jana's review, which is still pending (Action Items).*
 - [ ] Concern: the answer list ships inside the site's code, so anyone can read it in browser devtools (see ADR-0003)
 
 ---
@@ -139,8 +165,19 @@ The game needs two word lists, and it must decide which typed guesses count.
   - The whole bundle, both lists included, is 53 KB gzipped.
 - Outcome: `Accepted → Implemented`
 
+### Iteration 4 (2026-11-13)
+- Trigger: Jana's cold-resumption test, which found documentation gaps (rejected alternatives, reopening conditions, outdated TL;DRs, iteration numbering)
+- Contributors: Lexer 5.5 (Claude Opus 5.5), drawing only on what this record and the chat already contain
+- Changes:
+  - Rewrote the TL;DR (the iteration-1 draft still said "Still open: which guesses the game accepts").
+  - Added **Rejected alternatives**, **Reopen if**, and **Provenance** to the Decision, marking missing information `[Missing: …]`.
+  - Corrected an attribution: the unfiltered guess list was listed under "Trade-offs accepted" although Jana never ruled on it. It's now under "Not ruled on".
+  - Checked off the answer-list follow-up (done in iteration 3), noting that Jana's review is still pending. Added the ADR-0004 link.
+- Outcome: no status change (still Implemented). No decision changed.
+
 ---
 
 ## Links
 
-- Related ADRs: ADR-0001 (toolchain; the gate will run the scoring tests), ADR-0003 (game mode draws from this answer list)
+- Related ADRs: ADR-0001 (toolchain; the gate runs the scoring tests), ADR-0003 (game mode draws from this answer list), ADR-0004 (each answer now carries its hint clues in the same file)
+- Related code: `src/game/data/answers.txt`, `src/game/data/guesses.txt`, `src/game/words.ts`, `src/game/score.ts`, `scripts/ephemeral/2026-11-13-build-guess-list.sh`

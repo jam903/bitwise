@@ -3,11 +3,11 @@
 # Toolchain, language, and deploy pipeline
 
 - **Date**: 2026-11-13
-- **Iteration**: 4
+- **Iteration**: 5
 - **Status**: Implemented
-- **Deciders**: Jana Mourad, Lexer 5.5
+- **Deciders**: Jana Mourad (decided), Lexer 5.5 (recommended; made the implementation choices listed under Provenance)
 
-**TL;DR**: Vue 3 + Vite with scoped single-file components, Vitest, and a GitHub Actions deploy to Pages. Still open: TypeScript or JavaScript.
+**TL;DR**: TypeScript + Vue 3 (scoped single-file components) + Vite + Vitest, deployed to GitHub Pages by GitHub Actions on every push to `main`; repo renamed to `bitwise`; live at https://jam903.github.io/bitwise/.
 
 ---
 
@@ -73,9 +73,36 @@ The game needs a toolchain before any code: a language, a test runner, a build, 
 - The official Pages workflow (`configure-pages` → `upload-pages-artifact` → `deploy-pages`) builds and publishes on every push to `main`.
 - `just gate` = template checks + `npm run test:unit -- --run` + `npm run build`.
 
-**Rationale**: Jana accepted the recommendation (QST-LANGUAGE → A) and every Explicitation assumption on 2026-11-13. See the Recommendation above for the reasoning.
+**Rationale**: Jana accepted the recommendation (QST-LANGUAGE → A) and every Explicitation assumption on 2026-11-13. The only reasoning on record is Lexer 5.5's, in the Recommendation above. [Missing: Jana's own reasons. She approved "as recommended" without stating any.]
 
-**Trade-offs accepted**: type syntax to learn; the build fails on type errors even when the app would run.
+**Trade-offs accepted**: type syntax to learn; the build fails on type errors even when the app would run. (Both come from option A's description, which Jana chose.)
+
+### Rejected alternatives
+
+*Reasons below are quoted or paraphrased from this record (option descriptions, the Recommendation, the assumptions). None were stated by Jana.*
+
+- **B — Plain JavaScript** (QST-LANGUAGE). Not chosen. The recorded case is the Recommendation's case *for* A: letter states as a closed type, with type errors caught by the gate's build. The option itself notes that in JavaScript "typos and wrong props only show up in tests or in the browser."
+- **C — JavaScript + checked JSDoc** (QST-LANGUAGE). Not chosen. The only recorded reasons are in the option's own description: the gate wouldn't enforce it without a separate check, and it's the least common style in Vue examples. [Missing: the Recommendation never addressed C directly.]
+- **Committing a built `dist/` folder, or a `gh-pages` branch** (Deploy assumption, approved by Jana). Rejected because the Actions workflow means "nobody builds by hand."
+- **A hard-coded `base: '/<repo>/'`** (Base-path assumption, approved by Jana). Replaced during implementation by `BASE_PATH` read from `actions/configure-pages`, so renaming the repo can't silently break the site (iteration 3). This was Lexer 5.5's change; see Provenance.
+- **Keeping the repo name `wordle-with-records`** (iteration 4). When offered both, Jana chose to rename to `bitwise` (chat, 2026-11-13). The recorded reasons are Lexer 5.5's option text: the address matches the game's name and keeps "Wordle" out of the public URL (the trademark concern in Open Follow-ups). [Missing: Jana's own reasons.]
+- **A router, Pinia, end-to-end tests** (Scaffold assumption). Not adopted for now: "a single-screen game doesn't need them."
+
+### Reopen if
+
+*The only recorded condition is the Recommendation's* If wrong *line. Jana stated no reopening conditions of her own.*
+
+- **Switch to B (JavaScript)** if TypeScript proves to be friction without payoff. The recorded condition: Jana has never used TypeScript, and the project's main purpose is learning Vue and the deliberation method. [Missing: neither Jana's TypeScript background nor the project's main purpose was ever stated, so whether this condition already holds is unknown.]
+- [Missing: no reopening condition was recorded for the deploy pipeline, the base-path approach, the repo name, or the game name.]
+
+### Provenance
+
+- **Ruled by Jana** (chat, 2026-11-13): TypeScript (QST-LANGUAGE → A); the four Explicitation assumptions; the game name "Bitwise" (Lexer 5.5's working title, which Jana adopted); renaming the repo to `bitwise`; enabling Pages and pushing (she asked for both).
+- **Chosen by Lexer 5.5 during implementation, not explicitly ruled on by Jana:**
+  - `BASE_PATH` from `configure-pages` instead of a hard-coded base. Reported to Jana in chat; she didn't comment.
+  - `src/assets/base.css` as the one global stylesheet, an exception to her "scoped CSS so styles stay component-local." Raised with her in chat as a departure from her request. [Missing: Jana's ruling.]
+  - Node 24 in CI; `just gate` running app checks before template checks; scaffolding create-vue in a scratch directory; the test-only `localStorage` shim (`docs/TECHNICAL-DEBT.md`, TD-1).
+  - [Missing: Jana's ruling on the kintsugi warning that keeps `just gate` red; see Open Follow-ups.]
 
 ### Consequences
 - One closed type for letter states (`'correct' | 'present' | 'absent'`) shared by scoring, board, and keyboard.
@@ -138,9 +165,20 @@ The game needs a toolchain before any code: a language, a test runner, a build, 
   - The run warned that the pinned action majors target the deprecated Node 20 runtime; logged as TD-2.
 - Outcome: `Partially Implemented → Implemented`
 
+### Iteration 5 (2026-11-13)
+- Trigger: Jana's cold-resumption test. A fresh Claude session recovered the decisions but found documentation gaps: no explicit rejected alternatives, no reopening conditions, outdated TL;DRs, inconsistent iteration numbers.
+- Contributors: Lexer 5.5 (Claude Opus 5.5), drawing only on what this record and the chat already contain
+- Changes:
+  - Rewrote the TL;DR. The old one ("… Still open: TypeScript or JavaScript.") was the iteration-1 draft and went stale once QST-LANGUAGE was answered.
+  - Added **Rejected alternatives**, **Reopen if**, and **Provenance** to the Decision, marking missing information `[Missing: …]` instead of filling it in.
+  - Made attribution explicit: the Rationale now says the reasoning on record is Lexer 5.5's, and that Jana gave none of her own. The Deciders line now gives each person's role.
+  - Replaced the stale "Related code: none yet" in Links.
+- Outcome: no status change (still Implemented). No decision changed.
+
 ---
 
 ## Links
 
 - Related ADRs: ADR-0002 (word lists: bundle size depends on the guess list), ADR-0003 (game mode and saved state)
-- Related code: none yet
+- Related code: `package.json`, `vite.config.ts` (`BASE_PATH`), `vitest.config.ts`, `tsconfig*.json`, `.github/workflows/deploy.yml`, `justfile` (`gate` recipe), `src/assets/base.css`
+- Related docs: `docs/TECHNICAL-DEBT.md` (TD-1 test shim, TD-2 action majors)

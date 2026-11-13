@@ -3,11 +3,11 @@
 # Game mode and saved state
 
 - **Date**: 2026-11-13
-- **Iteration**: 3
+- **Iteration**: 5
 - **Status**: Implemented
-- **Deciders**: Jana Mourad, Lexer 5.5
+- **Deciders**: Jana Mourad (decided), Lexer 5.5 (recommended; made the implementation choices listed under Provenance)
 
-**TL;DR**: Game state and stats live in the player's browser (localStorage); there's no server. Still open: daily puzzle, unlimited play, or both.
+**TL;DR**: Unlimited play: each game picks a random CS answer through `pickAnswer()`, the seam for a possible future daily mode. The in-progress game (including hints used, per ADR-0004) and the stats live in the browser's localStorage. No server, no accounts.
 
 ---
 
@@ -67,9 +67,34 @@ The game needs to decide how answers are chosen and what is remembered between v
 - The in-progress game survives a reload; stats (played, wins, streaks, guess distribution) are kept per browser.
 - The end-of-game panel offers "play again".
 
-**Rationale**: Jana accepted the recommendation (QST-GAME-MODE → B) and both assumptions on 2026-11-13.
+**Rationale**: Jana accepted the recommendation (QST-GAME-MODE → B) and both assumptions on 2026-11-13. The only reasoning on record is Lexer 5.5's, in the Recommendation above. [Missing: Jana's own reasons. She approved "as recommended" without stating any.]
 
-**Trade-offs accepted**: no shared "today's word"; stats are lost if the browser storage is cleared; the answer list is readable in the site's code.
+**Trade-offs accepted**: no shared "today's word" (option B's description); stats are lost if the browser storage is cleared (follows from the localStorage assumption); the answer list is readable in the site's code (the "Spoilers are acceptable" assumption, which Jana approved).
+
+### Rejected alternatives
+
+*Reasons below come from this record (option descriptions, the Recommendation, the assumptions). None were stated by Jana.*
+
+- **A — Daily puzzle** (QST-GAME-MODE). Not chosen *for now*. Recommendation: while the word list is being built, unlimited play allows many test rounds a day to find bad words, where daily allows one; and a daily mode would spend a small, untested answer list one word per day. Deferred rather than ruled out: `pickAnswer()` is the seam for adding it.
+- **C — Both** (QST-GAME-MODE). Not chosen now. The Recommendation describes adding daily later as "moving to C … an addition, not a rewrite." The option's cost, as recorded: two progress records, a mode switch in the UI, and roughly double the state handling to test.
+- **Light obfuscation of the answer list** (Explicitation: "keeps casual eyes off it but isn't security"). Not implemented. [Missing: an explicit ruling. Jana approved "spoilers are acceptable" but said nothing about obfuscation either way.]
+
+### Reopen if
+
+*The only recorded condition is the Recommendation's* If wrong *line. Jana stated no reopening conditions of her own.*
+
+- **Switch to A (daily), or C if practice rounds are also wanted**, if the point becomes sharing the game with classmates or friends as a daily ritual ("did you get today's?").
+- [Missing: no reopening condition was recorded for storing state in localStorage instead of on a server.]
+
+### Provenance
+
+- **Ruled by Jana** (chat, 2026-11-13): option B; state and stats in localStorage with no accounts; spoilers acceptable. The `hints` field in the saved game follows from an ADR-0004 assumption she approved ("hint state saved with the game").
+- **Chosen by Lexer 5.5 during implementation, not ruled on by Jana:**
+  - `pickAnswer()` never repeats the previous answer.
+  - Stats are recorded only on the submit that ends a game.
+  - Every saved read is validated, and corrupted data starts a fresh game.
+  - The storage key names.
+  - Keeping the `…:game:v1` key when `hints` was added, with games saved earlier loading as 0 hints used (iteration 4).
 
 ### Consequences
 - If storage is unavailable (private mode, blocked), the game still plays; it just forgets.
@@ -119,8 +144,18 @@ The game needs to decide how answers are chosen and what is remembered between v
 - Changes: The saved game is now `{ answer, guesses, hints }`. The storage key stays `…:game:v1`, because `hints` is optional: games saved before the change load with 0 hints used (tested), so players mid-game during the deploy keep their game. Stats format unchanged.
 - Outcome: no status change (still Implemented)
 
+### Iteration 5 (2026-11-13)
+- Trigger: Jana's cold-resumption test, which found documentation gaps (rejected alternatives, reopening conditions, outdated TL;DRs, iteration numbering)
+- Contributors: Lexer 5.5 (Claude Opus 5.5), drawing only on what this record and the chat already contain
+- Changes:
+  - **Fixed the iteration mismatch**: iteration 4 was added without bumping the header, which still said `Iteration: 3`. The header now matches this entry (5).
+  - Rewrote the TL;DR (the iteration-1 draft still said "Still open: daily puzzle, unlimited play, or both"). It now also mentions the `hints` field from iteration 4.
+  - Added **Rejected alternatives**, **Reopen if**, and **Provenance** to the Decision, marking missing information `[Missing: …]`. Added the ADR-0004 link.
+- Outcome: no status change (still Implemented). No decision changed.
+
 ---
 
 ## Links
 
-- Related ADRs: ADR-0001 (toolchain), ADR-0002 (the answer list this mode draws from)
+- Related ADRs: ADR-0001 (toolchain), ADR-0002 (the answer list this mode draws from), ADR-0004 (adds the `hints` field to the saved game)
+- Related code: `src/game/useGame.ts`, `src/game/storage.ts`, `src/game/stats.ts`, `src/game/words.ts` (`pickAnswer`)
