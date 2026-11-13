@@ -1,0 +1,88 @@
+/*
+ * The only global stylesheet: design tokens and the page reset.
+ * Every component styles itself with <style scoped> (ADR-0001) and reads
+ * colors from these custom properties, so theming stays in one place.
+ */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --text: #1b1f24;
+  --muted: #5b6470;
+  --border: #c5ccd6;
+  --border-strong: #8a94a3;
+  --key: #dde2e8;
+  --key-text: #1b1f24;
+
+  --correct: #1f7a63;
+  --on-correct: #ffffff;
+  --present: #e0a93b;
+  --on-present: #1b1f24;
+  --absent: #6b7280;
+  --on-absent: #ffffff;
+
+  --accent: #1f7a63;
+  --on-accent: #ffffff;
+
+  --font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --radius: 8px;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1419;
+    --surface: #171d24;
+    --text: #e6e9ee;
+    --muted: #9aa4b2;
+    --border: #2f3a48;
+    --border-strong: #5a6778;
+    /* Unused keys must stay clearly lighter than ruled-out ("absent") keys,
+       or the keyboard stops telling the player which letters are dead. */
+    --key: #4a5566;
+    --key-text: #f1f3f6;
+
+    --correct: #23866c;
+    --present: #e5b04a;
+    --absent: #232a33;
+    --on-absent: #8b95a3;
+
+    --accent: #2fa284;
+    --on-accent: #0f1419;
+
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
