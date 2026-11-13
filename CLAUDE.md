@@ -1,6 +1,6 @@
 # CLAUDE.md - Project Guidance
 
-- **Project**: Bitwise (repo: `wordle-with-records`; name chosen 2026-11-13, see ADR-0001's follow-ups)
+- **Project**: Bitwise (repo: `jam903/bitwise`, renamed from `wordle-with-records` 2026-11-13; live at https://jam903.github.io/bitwise/; see ADR-0001)
 - **Human**: Jana Mourad
 - **AI**: Lexer 5.5 (Claude Opus 5.5, Claude Code) — single founding seat; roster in `docs/inbox/agent-sessions.json`
 - **Last Updated**: 2026-11-13

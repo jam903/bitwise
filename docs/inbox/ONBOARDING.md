@@ -1,6 +1,6 @@
 # Crew Onboarding — read this first if you've been recruited
 
-Welcome to **wordle-with-records**: a word-guessing game with computer-science answers (Vue + GitHub Pages), built deliberately by Jana Mourad with Claude.
+Welcome to **Bitwise**: a word-guessing game with computer-science answers (Vue + GitHub Pages), built deliberately by Jana Mourad with Claude.
 
 This document captures **80% of what every seat needs to know** so per-recruit
 briefs can be short deltas (name, color, mission). Fill the bracketed

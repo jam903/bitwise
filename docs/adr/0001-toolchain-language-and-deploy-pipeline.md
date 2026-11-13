@@ -96,7 +96,8 @@ The game needs a toolchain before any code: a language, a test runner, a build, 
 - [x] Answer QST-LANGUAGE - Owner: Jana Mourad
 - [x] Scaffold with `npm create vue@latest` per the answer; set `base`; add the deploy workflow - Owner: Lexer 5.5
 - [x] Extend `just gate` with the app test + build steps; update CLAUDE.md's Fifth Directive to match - Owner: Lexer 5.5
-- [ ] Enable Pages (Settings → Pages → Source: GitHub Actions) and push `main` for the first deploy - Owner: Jana Mourad
+- [x] Rename the repo to `bitwise` so the address matches the game (Jana chose this 2026-11-13; site: https://jam903.github.io/bitwise/) - Owner: Lexer 5.5
+- [ ] Enable Pages (Source: GitHub Actions) and push `main` for the first deploy - Owner: Lexer 5.5, approved by Jana Mourad
 - [x] Choose the public game name before the first public deploy: **Bitwise** (Jana, 2026-11-13) - Owner: Jana Mourad
 
 ---

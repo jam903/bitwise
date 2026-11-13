@@ -37,7 +37,7 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
 
-      # BASE_PATH is the site's path prefix (e.g. /wordle-with-records), read
+      # BASE_PATH is the site's path prefix (e.g. /bitwise), read
       # from Pages itself so a repo rename can't leave the build pointing at
       # the wrong place (vite.config.ts).
       - name: Type-check and build
