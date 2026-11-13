@@ -3,8 +3,8 @@
 # Hint button: what a clue reveals
 
 - **Date**: 2026-11-13
-- **Iteration**: 1
-- **Status**: Draft
+- **Iteration**: 2
+- **Status**: Accepted
 - **Deciders**: Jana Mourad, Lexer 5.5
 
 **TL;DR**: Add a hint button that gives a clue about the hidden CS word. Still open: what the clue reveals, which decides how much clue text gets written and fact-checked.
@@ -44,7 +44,7 @@
 ## Questions
 
 ### QST-HINT-CONTENT: What should the hint reveal about the hidden word?
-- Status: unanswered
+- Status: answered
 - Why asking: This decides how much the hint helps, how much text has to be written (one clue per answer, 117 answers today), and how much you'll need to review. Examples below use STACK and MUTEX.
 - Need: pick a letter (or override — any shape answers)
 
@@ -59,13 +59,29 @@ Options:
 **D — Two steps: category, then definition.** *Rationale*: Your request names "a clue about the computer science word", which rules out C as the main hint. A alone is often too weak: by my estimate a category like "data structure" still leaves about 10–15 of the 117 answers. B alone is often too strong. D covers both kinds of player, and the definitions add a second payoff: showing the meaning on the result panel puts the CS twist where it lands hardest (ADR-0002's "the reveal is where the twist shows"). I would draft all categories and definitions; you'd fact-check them in one reviewable file. *Confidence*: 0.65, because the mechanics are simple but the right difficulty is a taste call about who plays Bitwise, which only you know. That makes it your call. *If wrong*: if you want hints to stay light and keep the game a puzzle, or don't want to fact-check 117 definitions, this flips to **A**. If you'd rather never write clue text at all, it flips to **C**.
 
 **ANS:** (by Jana Mourad)
-[Fill this in]   <!-- literal placeholder — parser-significant, do not paraphrase -->
+D — two steps: category first, then definition, as recommended. I also agree with the listed assumptions (button between board and keyboard, clue shown above the board, available from the start, hint state saved with the game, no stats change but "solved with a hint" on the result panel, a test requiring a clue for every answer). (Given in chat 2026-11-13; recorded by Lexer 5.5.)
 
 ---
 
 ## Decision
 
-*Pending QST-HINT-CONTENT.*
+### Context
+Players who get stuck need a way forward that teaches them something about the CS term instead of just handing over letters.
+
+### Chosen: two-step hint, category then definition
+
+- First press reveals the word's **category** (e.g. "data structures"); a second press reveals its one-line **definition**. There's no third step.
+- Every answer carries both clues in the same data file as the word (`src/game/data/answers.txt`).
+- Every listed assumption is approved: button between board and keyboard, clue above the board, available from the start, hint state saved with the game, no stats change, "solved with a hint" on the result panel, and a test that fails if any answer lacks a clue.
+- Because definitions exist for every word, the result panel also shows the answer's category and definition.
+
+**Rationale**: Jana chose D (QST-HINT-CONTENT) on 2026-11-13. See the Recommendation above for the reasoning.
+
+**Trade-offs accepted**: 117 categories and definitions to draft and fact-check; the second hint often gives the word away to CS students.
+
+### Consequences
+- The answer file's format grows from one word per line to `WORD | category | definition`.
+- Saved games gain a hint count. Games saved before this change must still load (they predate hints, so they count as zero used).
 
 ---
 
@@ -78,7 +94,7 @@ Options:
 
 ## Action Items
 
-- [ ] Answer QST-HINT-CONTENT and confirm the assumptions - Owner: Jana Mourad
+- [x] Answer QST-HINT-CONTENT and confirm the assumptions - Owner: Jana Mourad
 - [ ] Draft the clue data; implement the button, saved state, and result-panel line; tests; deploy - Owner: Lexer 5.5
 - [ ] Fact-check the clue file - Owner: Jana Mourad
 
@@ -91,6 +107,12 @@ Options:
 - Contributors: Lexer 5.5 (Claude Opus 5.5)
 - Changes: Laid out the assumptions; asked QST-HINT-CONTENT
 - Outcome: Draft; awaiting Jana's answer
+
+### Iteration 2 (2026-11-13)
+- Trigger: Jana's answer in chat ("I choose Option D … I agree with your recommendation and the listed assumptions")
+- Contributors: Jana Mourad, Lexer 5.5 (Claude Opus 5.5)
+- Changes: Recorded the answer (D — category, then definition); filled the Decision
+- Outcome: `Draft → Accepted`
 
 ---
 
